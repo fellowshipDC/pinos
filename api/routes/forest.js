@@ -18,6 +18,7 @@ var findDocuments = function(db, callback){
 }
 
 router.get('/', function(req, res, next){
+    //get mongo connection
     MongoClient.connect(url, function(err, db){
         assert.equal(null, err);
         console.log("Conected correctly to server");
@@ -29,6 +30,24 @@ router.get('/', function(req, res, next){
             db.close();
             res.json({status: 200, data: docs});            
         });
+    })
+})
+
+router.get('/country/mt2', function(req, res, next){
+    //get mongo conection
+    MongoClient.connect(url, function(err, db){
+        assert.equal(null, err);
+        console.log('Conected correctly to server');
+        //find only country level data
+        var col = db.collection('forestwatch');
+        col.find({indicator_id: 14, sub_nat_id: null, boundary_id: 1, thresh: 10}).toArray(function(err, docs){
+            console.log('Found records');
+            console.dir(docs);
+            db.close();
+            res.json({status: 200, data: docs})
+        })
+
+
     })
 })
 

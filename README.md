@@ -1,1 +1,1 @@
-Mexican deforestation data viz with data between 2000-2016 from the Global Forest Watch.
+Data viz of mexican deforestation between 2000-2016 with data from the Global Forest Watch.

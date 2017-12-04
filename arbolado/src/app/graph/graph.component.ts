@@ -14,6 +14,16 @@ export class GraphComponent implements OnInit {
   constructor(private http: Http) { }
 
   ngOnInit() {
+    var w = 500;
+    var h = 300;
+
+    var line = d3.select('#graphid');
+
+    var l = line.append('svg')
+      .attr('width', w)
+      .attr('height', h)
+      .attr('id', 'viz')
+
   }
 
   getData() {
