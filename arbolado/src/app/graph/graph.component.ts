@@ -291,10 +291,6 @@ export class GraphComponent implements OnInit {
       .x(function(d, i) {return x(i);})
       .y(function(d) {return y(d);});
       //.interpolate('cardinal')
-
-    console.log(this.data, d)
-    //
-
   }
 
   /*getData() {
