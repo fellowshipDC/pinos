@@ -15,11 +15,12 @@ export class MapComponent implements OnInit {
   map: any;
   corner1 = [40.313701, -130.480714];
   corner2 = [5.156748, -74.840222];
-
+  
   constructor(private http: Http) { }
 
   setmap(){
-    //set the map characteristics
+
+    //set base characteristics
     this.map = L.map('mapid',{
       center: [23.132442, -102.852647],
       zoom: 4.5,
@@ -28,17 +29,10 @@ export class MapComponent implements OnInit {
       zoomSnap: 0,
       zoomDelta: 0.25,
       maxBounds: [this.corner1, this.corner2],
-      maxBoundsViscosity: 0.9
+      maxBoundsViscosity: 0.9,
     });
 
-    //tile layer supplier
-    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-      attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-      maxZoom: 18,
-      id: 'mapbox.streets',
-      accessToken: 'pk.eyJ1Ijoic2F0aXJhbWEiLCJhIjoiY2phcmhpZWxjNGppaDJ3cGwyYmp0NGVtZyJ9.1E3t6hV_CYLzQ_0Ba1IFmQ'
-    }).addTo(this.map);
-
+    //set styles functions
     function getColor1(d) {
       return d > 30 ? '#800026' :
              d > 26  ? '#BD0026' :
@@ -83,7 +77,8 @@ export class MapComponent implements OnInit {
       };
     }
 
-    function highlightFeature(e) {
+    //hover effect
+    function highlight(e) {
       var layer = e.target;
   
       layer.setStyle({
@@ -96,18 +91,68 @@ export class MapComponent implements OnInit {
       if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
           layer.bringToFront();
       }
-  }
-  
-    //L.geoJson(world, {style: styleWorld}).addTo(this.map);
-    var layer1 = L.geoJson(states, {style: styleStates1}).addTo(this.map);
-    var layer2 = L.geoJson(states, {style: styleStates2}).addTo(this.map);
+    }
 
+    //mouse out effect
+    function resetHighlight(e){
+      currentLayer.resetStyle(e.target);
+    }
+
+    //function to zoom to clicked state
+    function zoomFeature(e) {
+      console.log('fit', e.target._bounds._northEast);
+    }
+
+    //function to set effects for eachfeature
+    function mouseEffects(feature, layer){
+      layer.on({
+        mouseover: highlight,
+        mouseout: resetHighlight,
+        click: zoomFeature
+      });
+    }
+
+  //Map layers 
+    //Base layers (deforestation rate & Co2 mt2 emmissions)
+    var layer1 = L.geoJson(states, {style: styleStates1, onEachFeature: mouseEffects}).addTo(this.map);
+    var layer2 = L.geoJson(states, {style: styleStates2, onEachFeature: mouseEffects});
+    var currentLayer = layer1;
+
+    //Over layers (shows if deforestation occurred in a protected or mining area)
+    var overlay11 = L.marker([10.6595382,-100.3494]).bindPopup('This is Littleton, CO.');
+    var overlay12 = L.marker([15.3765406,-83.6694021]).bindPopup('This is Littleton, CO.');
+
+    var overlay21 = L.marker([20.6595382,-103.3494]).bindPopup('This is Littleton, CO.');
+    var overlay22 = L.marker([7.3765406,-93.6694021]).bindPopup('This is Littleton, CO.');
+
+    var overlay1 = L.layerGroup([overlay11, overlay12]);
+    var overlay2 = L.layerGroup([overlay21, overlay22]);
+
+    //Define set of layers
     var baseLayers = {
       "Layer 1": layer1,
       "Layer 2": layer2
     }
 
-    L.control.layers(baseLayers).addTo(this.map);
+    var overLayers = {
+      "Over 1": overlay1,
+      "Over 2": overlay2
+    }
+
+    //tile layer supplier
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+      attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+      maxZoom: 18,
+      id: 'mapbox.light',
+      accessToken: 'pk.eyJ1Ijoic2F0aXJhbWEiLCJhIjoiY2phcmhpZWxjNGppaDJ3cGwyYmp0NGVtZyJ9.1E3t6hV_CYLzQ_0Ba1IFmQ'
+    }).addTo(this.map);
+
+    //Add layers with control and track current layer
+    L.control.layers(baseLayers, overLayers).addTo(this.map);
+    this.map.on('baselayerchange', function(e){
+      currentLayer = baseLayers[e.name];
+    })
+
 
   }
 
