@@ -272,7 +272,7 @@ export class GraphComponent implements OnInit {
 
   ngOnInit() {
     //svg width and height
-    var w = 500;
+    /*var w = 500;
     var h = 300;
 
     var graph = d3.select('#graphid')
@@ -293,8 +293,9 @@ export class GraphComponent implements OnInit {
       //.interpolate('cardinal')
   }
 
-  /*getData() {
+  getData() {
     this.http.get('http://localhost:3000/forest/country/mt2').subscribe((res: Response) => this.req = res.json().data)
   }*/
+}
 
 }
