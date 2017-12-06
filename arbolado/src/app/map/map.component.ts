@@ -77,41 +77,7 @@ export class MapComponent implements OnInit {
       };
     }
 
-    //hover effect
-    function highlight(e) {
-      var layer = e.target;
-  
-      layer.setStyle({
-          weight: 5,
-          color: '#666666',
-          dashArray: '',
-          fillOpacity: 0.7
-      });
-  
-      if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-          layer.bringToFront();
-      }
-    }
-
-    //mouse out effect
-    function resetHighlight(e){
-      currentLayer.resetStyle(e.target);
-    }
-
-    //function to zoom to clicked state
-    function zoomFeature(e) {
-      console.log('fit', e.target._bounds._northEast);
-    }
-
-    //function to set effects for eachfeature
-    function mouseEffects(feature, layer){
-      layer.on({
-        mouseover: highlight,
-        mouseout: resetHighlight,
-        click: zoomFeature
-      });
-    }
-
+    
   //Map layers 
     //Base layers (deforestation rate & Co2 mt2 emmissions)
     var layer1 = L.geoJson(states, {style: styleStates1, onEachFeature: mouseEffects}).addTo(this.map);
@@ -139,6 +105,83 @@ export class MapComponent implements OnInit {
       "Over 2": overlay2
     }
 
+  //info controls
+    //details control 
+    var details = L.control({position: 'bottomleft'});
+    
+    details.onAdd = function(map){
+      this._div = L.DomUtil.create('div', 'info');
+      this.update();
+      return this._div;
+    };
+
+    details.update = function(prop){
+      this._div.innerHTML = '<h4>Deforestación en México</h4>' + 
+      (prop ? '<b>' + prop.admin_name +  '</b><br />' + 'state' + prop.sub_nat_id 
+      : 'Hover over a state');
+    }
+
+    details.addTo(this.map);
+    
+    //data scale legend
+    var legend = L.control({position: 'bottomright'});
+
+    legend.onAdd = function(map){
+      this._div = L.DomUtil.create('div', 'legend');
+      this.update();
+      return this._div;
+    }
+
+    legend.update = function(layer){
+      var grades = [0, 5, 9, 14, 19, 24, 29];
+      var labels = [];
+
+      for (var i = 0; i < grades.length; i++){
+        this._div.innerHTML = '<i style="background:' + getColor1(grades[i] + 1) + '"></i> ' +
+        grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+      }
+    }
+
+    legend.addTo(this.map);
+
+    //hover effect
+    function highlight(e) {
+      var layer = e.target;
+  
+      layer.setStyle({
+          weight: 5,
+          color: '#666666',
+          dashArray: '',
+          fillOpacity: 0.7
+      });
+  
+      if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+          layer.bringToFront();
+      }
+
+      details.update(layer.feature.properties);
+    }
+
+    //mouse out effect
+    function resetHighlight(e){
+      currentLayer.resetStyle(e.target);
+      details.update();
+    }
+
+    //function to zoom to clicked state
+    function zoomFeature(e) {
+      console.log('fit', e.target._bounds._northEast);
+    }
+
+    //function to set effects for eachfeature
+    function mouseEffects(feature, layer){
+      layer.on({
+        mouseover: highlight,
+        mouseout: resetHighlight,
+        click: zoomFeature
+      });
+    }
+
     //tile layer supplier
     L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
       attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
@@ -151,9 +194,8 @@ export class MapComponent implements OnInit {
     L.control.layers(baseLayers, overLayers).addTo(this.map);
     this.map.on('baselayerchange', function(e){
       currentLayer = baseLayers[e.name];
+      legend.update(1);
     })
-
-
   }
 
   ngOnInit() {
