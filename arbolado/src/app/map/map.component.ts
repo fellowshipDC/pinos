@@ -16,7 +16,8 @@ export class MapComponent implements OnInit {
   corner1 = [40.313701, -130.480714];
   corner2 = [5.156748, -74.840222];
   co2 = [];
-  haloss = [];
+  treeLoss = [];
+  year = 2001;
   
   constructor(private http: Http) { }
 
@@ -36,19 +37,37 @@ export class MapComponent implements OnInit {
 
     //set styles functions
     function getColor1(d) {
-      return d > 30 ? '#800026' :
-             d > 26  ? '#BD0026' :
-             d > 22  ? '#E31A1C' :
-             d > 18  ? '#FC4E2A' :
-             d > 14   ? '#FD8D3C' :
-             d > 10   ? '#FEB24C' :
-             d > 6   ? '#FED976' :
+      return d > 5000 ? '#800026' :
+             d > 4500  ? '#BD0026' :
+             d > 4000  ? '#E31A1C' :
+             d > 3500  ? '#FC4E2A' :
+             d > 2500   ? '#FD8D3C' :
+             d > 1500   ? '#FEB24C' :
+             d > 500   ? '#FED976' :
                         '#FFEDA0';
     }
 
-    function styleStates1(feature) {
+    var styleStates1 = (feature) => {
+      var featureStateId = feature.properties.sub_nat_id;//find the state to be styled
+      //find the year wanted
+      //console.log(this.year);
+      var forYear = this.treeLoss.filter((obj)=>{ 
+        if(obj.year == this.year){
+          //console.log('year checked');
+          return true;
+        }
+      })
+      //find the state in db
+      var stateData = {};
+      for (var i = 0; i < forYear.length; i++){
+        if(forYear[i].sub_nat_id == featureStateId){
+          stateData = forYear[i];
+        }
+      }
+      console.log(stateData.value);
+
       return {
-          fillColor: getColor1(feature.properties.sub_nat_id),
+          fillColor: getColor1(stateData.value),
           weight: 2,
           opacity: 1,
           color: 'white',
@@ -220,14 +239,13 @@ export class MapComponent implements OnInit {
 
   ngOnInit() {
     this.getData();
-    this.setmap();
   }
 
   getData() {
     this.http.get('http://localhost:3000/forest')
     .subscribe((res: Response) => {
     this.data = res.json();
-    this.haloss = res.json().data.filter((obj)=>{
+    this.treeLoss = res.json().data.filter((obj)=>{
       if (obj.indicator_id == 1 && obj.sub_nat_id > 0 && obj.boundary_id ==1 && obj.thresh == 10){
         return true;
       }
@@ -244,8 +262,11 @@ export class MapComponent implements OnInit {
       }
     });
     
+    if (this.treeLoss.length > 0 && this.co2.length > 0){
+      this.setmap();
+    }
     
-    })
+    });
     console.log('exito');
 
   }
