@@ -132,10 +132,23 @@ export class MapComponent implements OnInit {
       return this._div;
     };
 
-    details.update = function(prop){
-      this._div.innerHTML = '<h4>Deforestación en México</h4>' + 
-      (prop ? '<b>' + prop.admin_name +  '</b><br />' + 'state' + prop.sub_nat_id 
-      : 'Hover over a state');
+    details.update = (prop) => {
+      var propData = prop ? this.treeLoss.filter((obj)=>{
+        if(obj.year == this.year && obj.sub_nat_id == prop.sub_nat_id){
+          return true;
+        }
+      })[0].value.toFixed(2).toLocaleString() : '';
+      
+      if(currentLayer == 'Layer 1'){
+        details._div.innerHTML = '<h4>Deforestación en México</h4>' + 
+        (prop ? '<b>' + prop.admin_name +  '</b><br />' + propData + ' ha perdidas'
+        : 'Hover over a state');
+      }
+      else{
+        details._div.innerHTML = '<h4>Deforestación en México</h4>' + 
+        (prop ? '<b>' + prop.admin_name +  '</b><br />' + 'mt2CO2 emitidos' + prop.sub_nat_id 
+        : 'Hover over a state');
+      }
     }
 
     details.addTo(this.map);
@@ -161,6 +174,7 @@ export class MapComponent implements OnInit {
         }
       }
       else{
+        var grades = [0, 500, 1500, 2500, 3500, 4000, 4500, 5000];
         for (var i = 0; i < grades.length; i++){
           this._div.innerHTML += '<i class="fa fa-square" style="color:' + getColor2(grades[i] + 1) + '"></i> ' +
           grades[i] + (grades[i + 1] ? '&ndash;' + (grades[i + 1]-1) + '<br>' : '+');

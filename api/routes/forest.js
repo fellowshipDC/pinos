@@ -24,9 +24,8 @@ router.get('/', function(req, res, next){
         console.log("Conected correctly to server");
         //get collection and res documents
         var col = db.collection('forestwatch');
-        col.find({}).limit(30).toArray(function(err, docs) {
+        col.find({}).toArray(function(err, docs) {
             console.log("Found the following records");
-            console.dir(docs);
             db.close();
             res.json({status: 200, data: docs});            
         });
