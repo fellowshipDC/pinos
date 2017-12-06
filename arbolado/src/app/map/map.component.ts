@@ -25,10 +25,10 @@ export class MapComponent implements OnInit {
       center: [23.132442, -102.852647],
       zoom: 4.5,
       maxZoom: 5.5,
-      minZoom: 4,
+      minZoom: 3,
       zoomSnap: 0,
       zoomDelta: 0.25,
-      maxBounds: [this.corner1, this.corner2],
+      //maxBounds: [this.corner1, this.corner2],
       maxBoundsViscosity: 0.9,
     });
 
@@ -82,8 +82,7 @@ export class MapComponent implements OnInit {
     //Base layers (deforestation rate & Co2 mt2 emmissions)
     var layer1 = L.geoJson(states, {style: styleStates1, onEachFeature: mouseEffects}).addTo(this.map);
     var layer2 = L.geoJson(states, {style: styleStates2, onEachFeature: mouseEffects});
-    var currentLayer = layer1;
-
+    
     //Over layers (shows if deforestation occurred in a protected or mining area)
     var overlay11 = L.marker([10.6595382,-100.3494]).bindPopup('This is Littleton, CO.');
     var overlay12 = L.marker([15.3765406,-83.6694021]).bindPopup('This is Littleton, CO.');
@@ -104,6 +103,9 @@ export class MapComponent implements OnInit {
       "Over 1": overlay1,
       "Over 2": overlay2
     }
+
+    var currentLayer = "Layer 1";
+    
 
   //info controls
     //details control 
@@ -127,23 +129,42 @@ export class MapComponent implements OnInit {
     var legend = L.control({position: 'bottomright'});
 
     legend.onAdd = function(map){
-      this._div = L.DomUtil.create('div', 'legend');
+      this._div = L.DomUtil.create('div', 'info legend');
       this.update();
+      /*var grades = [0, 5, 9, 14, 19, 24, 29];
+      var labels = [];
+
+      for (var i = 0; i < grades.length; i++){
+        this._div.innerHTML += '<i class="fa fa-square" style="color:' + getColor1(grades[i] + 1) + '"></i> ' +
+        grades[i] + (grades[i + 1] ? '&ndash;' + (grades[i + 1]-1) + '<br>' : '+');
+      }*/
       return this._div;
     }
 
     legend.update = function(layer){
+      this._div.innerHTML = '';
       var grades = [0, 5, 9, 14, 19, 24, 29];
       var labels = [];
 
-      for (var i = 0; i < grades.length; i++){
-        this._div.innerHTML = '<i style="background:' + getColor1(grades[i] + 1) + '"></i> ' +
-        grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+      if (currentLayer == 'Layer 1'){//change for layer's name
+        for (var i = 0; i < grades.length; i++){
+          this._div.innerHTML += '<i class="fa fa-square" style="color:' + getColor1(grades[i] + 1) + '"></i> ' +
+          grades[i] + (grades[i + 1] ? '&ndash;' + (grades[i + 1]-1) + '<br>' : '+');
+        }
       }
+      else{
+        for (var i = 0; i < grades.length; i++){
+          this._div.innerHTML += '<i class="fa fa-square" style="color:' + getColor2(grades[i] + 1) + '"></i> ' +
+          grades[i] + (grades[i + 1] ? '&ndash;' + (grades[i + 1]-1) + '<br>' : '+');
+        }
+      }
+
+      
     }
 
     legend.addTo(this.map);
-
+  
+  //effects control
     //hover effect
     function highlight(e) {
       var layer = e.target;
@@ -164,13 +185,15 @@ export class MapComponent implements OnInit {
 
     //mouse out effect
     function resetHighlight(e){
-      currentLayer.resetStyle(e.target);
+      baseLayers[currentLayer].resetStyle(e.target);
       details.update();
     }
 
     //function to zoom to clicked state
     function zoomFeature(e) {
       console.log('fit', e.target._bounds._northEast);
+      this.map.flyToBounds([[e.target._bounds._northEast.lat, e.target._bounds._northEast.lng],
+      e.target._bounds._southWest.lat, e.target._bounds._southWest.lng])
     }
 
     //function to set effects for eachfeature
@@ -182,6 +205,7 @@ export class MapComponent implements OnInit {
       });
     }
 
+  //layers control
     //tile layer supplier
     L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
       attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
@@ -193,8 +217,8 @@ export class MapComponent implements OnInit {
     //Add layers with control and track current layer
     L.control.layers(baseLayers, overLayers).addTo(this.map);
     this.map.on('baselayerchange', function(e){
-      currentLayer = baseLayers[e.name];
-      legend.update(1);
+      currentLayer = e.name;//updates layer
+      legend.update(currentLayer);//updates legend
     })
   }
 
