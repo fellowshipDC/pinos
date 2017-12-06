@@ -15,6 +15,8 @@ export class MapComponent implements OnInit {
   map: any;
   corner1 = [40.313701, -130.480714];
   corner2 = [5.156748, -74.840222];
+  co2 = [];
+  haloss = [];
   
   constructor(private http: Http) { }
 
@@ -131,13 +133,7 @@ export class MapComponent implements OnInit {
     legend.onAdd = function(map){
       this._div = L.DomUtil.create('div', 'info legend');
       this.update();
-      /*var grades = [0, 5, 9, 14, 19, 24, 29];
-      var labels = [];
-
-      for (var i = 0; i < grades.length; i++){
-        this._div.innerHTML += '<i class="fa fa-square" style="color:' + getColor1(grades[i] + 1) + '"></i> ' +
-        grades[i] + (grades[i + 1] ? '&ndash;' + (grades[i + 1]-1) + '<br>' : '+');
-      }*/
+      
       return this._div;
     }
 
@@ -192,8 +188,8 @@ export class MapComponent implements OnInit {
     //function to zoom to clicked state
     function zoomFeature(e) {
       console.log('fit', e.target._bounds._northEast);
-      this.map.flyToBounds([[e.target._bounds._northEast.lat, e.target._bounds._northEast.lng],
-      e.target._bounds._southWest.lat, e.target._bounds._southWest.lng])
+      //this.map.flyToBounds([[e.target._bounds._northEast.lat, e.target._bounds._northEast.lng],
+      //e.target._bounds._southWest.lat, e.target._bounds._southWest.lng])
     }
 
     //function to set effects for eachfeature
@@ -223,13 +219,35 @@ export class MapComponent implements OnInit {
   }
 
   ngOnInit() {
-    //this.getData();
+    this.getData();
     this.setmap();
   }
 
   getData() {
     this.http.get('http://localhost:3000/forest')
-    .subscribe((res: Response) => this.data = res.json())
+    .subscribe((res: Response) => {
+    this.data = res.json();
+    this.haloss = res.json().data.filter((obj)=>{
+      if (obj.indicator_id == 1 && obj.sub_nat_id > 0 && obj.boundary_id ==1 && obj.thresh == 10){
+        return true;
+      }
+      else{
+        return false;
+      }
+    });
+    this.co2 = res.json().data.filter((obj)=>{
+      if (obj.indicator_id == 14 && obj.sub_nat_id > 0 && obj.boundary_id ==1 && obj.thresh == 10){
+        return true;
+      }
+      else{
+        return false;
+      }
+    });
+    
+    
+    })
+    console.log('exito');
+
   }
 
 }
