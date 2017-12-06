@@ -36,7 +36,7 @@ export class MapComponent implements OnInit {
     });
 
     //set styles functions
-    function getColor1(d) {
+    function getColorTreeLoss(d) {
       return d > 5000 ? '#800026' :
              d > 4500  ? '#BD0026' :
              d > 4000  ? '#E31A1C' :
@@ -50,30 +50,24 @@ export class MapComponent implements OnInit {
     var styleStates1 = (feature) => {
       var featureStateId = feature.properties.sub_nat_id;//find the state to be styled
       //find the year wanted
-      //console.log(this.year);
       var forYear = this.treeLoss.filter((obj)=>{ 
         if(obj.year == this.year){
-          //console.log('year checked');
           return true;
         }
       })
       //find the state in db
-      var stateData = {};
       for (var i = 0; i < forYear.length; i++){
         if(forYear[i].sub_nat_id == featureStateId){
-          stateData = forYear[i];
+          return {
+            fillColor: getColorTreeLoss(forYear[i].value),
+            weight: 2,
+            opacity: 1,
+            color: 'white',
+            dashArray: '3',
+            fillOpacity: 0.7
+        };
         }
       }
-      console.log(stateData.value);
-
-      return {
-          fillColor: getColor1(stateData.value),
-          weight: 2,
-          opacity: 1,
-          color: 'white',
-          dashArray: '3',
-          fillOpacity: 0.7
-      };
     }
 
     function getColor2(d) {
@@ -158,12 +152,11 @@ export class MapComponent implements OnInit {
 
     legend.update = function(layer){
       this._div.innerHTML = '';
-      var grades = [0, 5, 9, 14, 19, 24, 29];
-      var labels = [];
 
       if (currentLayer == 'Layer 1'){//change for layer's name
+        var grades = [0, 500, 1500, 2500, 3500, 4000, 4500, 5000];
         for (var i = 0; i < grades.length; i++){
-          this._div.innerHTML += '<i class="fa fa-square" style="color:' + getColor1(grades[i] + 1) + '"></i> ' +
+          this._div.innerHTML += '<i class="fa fa-square" style="color:' + getColorTreeLoss(grades[i] + 1) + '"></i> ' +
           grades[i] + (grades[i + 1] ? '&ndash;' + (grades[i + 1]-1) + '<br>' : '+');
         }
       }
