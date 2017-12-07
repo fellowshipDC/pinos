@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { states } from './mexican_states';
-//import { world } from './worldgeojson';
 import * as L from 'leaflet';
 
 @Component({
@@ -26,12 +25,11 @@ export class MapComponent implements OnInit {
     //set base characteristics
     this.map = L.map('mapid',{
       center: [23.132442, -102.852647],
-      zoom: 4.25,
+      zoom: 4,
       maxZoom: 5.5,
-      minZoom: 3,
+      minZoom: 2.5,
       zoomSnap: 0,
       zoomDelta: 0.25,
-      //maxBounds: [this.corner1, this.corner2],
       maxBoundsViscosity: 0.9,
     });
 
@@ -71,13 +69,13 @@ export class MapComponent implements OnInit {
     }
 
     function getColorCo2(d) {
-      return d > 3.5 ? '#034e7b' :
-             d > 2.5  ? '#0570b0' :
-             d > 1.5  ? '#3690c0' :
-             d > 0.5  ? '#74a9cf' :
-             d > 0.3   ? '#a6bddb' :
-             d > 0.2   ? '#d0d1e6' :
-             d > 0.1   ? '#ece7f2' :
+      return d > 1000000 ? '#034e7b' :
+             d > 500000  ? '#0570b0' :
+             d > 200000  ? '#3690c0' :
+             d > 100000  ? '#74a9cf' :
+             d > 50000  ? '#a6bddb' :
+             d > 20000   ? '#d0d1e6' :
+             d > 10000   ? '#ece7f2' :
                         '#fff7fb';
     }
 
@@ -93,7 +91,7 @@ export class MapComponent implements OnInit {
       for (var i = 0; i < forYear.length; i++){
         if(forYear[i].sub_nat_id == featureStateId){
           return {
-          fillColor: getColorCo2(forYear[i].value),
+          fillColor: getColorCo2(forYear[i].value * 1000000),
           weight: 2,
           opacity: 1,
           color: 'white',
@@ -145,29 +143,36 @@ export class MapComponent implements OnInit {
     };
 
     details.update = (prop) => {
-    //set details according to layer data
+      //set details according to layer data
       if(currentLayer == 'Layer 1'){
+
         //find state and year wanted
         var propData = prop ? this.treeLoss.filter((obj)=>{
           if(obj.year == this.year && obj.sub_nat_id == prop.sub_nat_id){
             return true;
           }
-        })[0].value.toLocaleString('en-IN',{maximumFractionDigits: 2}) : '';
+        })[0].value.toLocaleString(undefined, {maximumFractionDigits: 2}) : '';
+
         //write it on 
         details._div.innerHTML = '<h4>Deforestación en México</h4>' + 
         (prop ? '<b>' + prop.admin_name +  '</b><br />' + propData + ' ha perdidas'
         : 'Hover over a state');
       }
       else{
+
         //find state and year wanted
         var propData = prop ? this.co2.filter((obj)=>{
           if(obj.year == this.year && obj.sub_nat_id == prop.sub_nat_id){
             return true;
           }
-        })[0].value.toLocaleString('en-IN',{maximumFractionDigits: 2}) : '';
+        })[0].value : '';
+
+        //scale value
+        propData = (propData* 1000000).toLocaleString(undefined, {maximumFractionDigits: 2});
         //write it on
+
         details._div.innerHTML = '<h4>Deforestación en México</h4>' + 
-        (prop ? '<b>' + prop.admin_name +  '</b><br />' + propData + 'mt<sup>2</sup>CO2 emitidos' 
+        (prop ? '<b>' + prop.admin_name +  '</b><br />' + propData + ' toneladas de CO2 emitidas' 
         : 'Hover over a state');
       }
     }
@@ -195,10 +200,10 @@ export class MapComponent implements OnInit {
         }
       }
       else{
-        var grades = [0, 0.1, 0.2, 0.3, 0.5, 1.5, 2.5, 3.5];
+        var grades = [0, 10000, 20000, 50000, 100000, 200000, 500000, 1000000];
         for (var i = 0; i < grades.length; i++){
           this._div.innerHTML += '<i class="fa fa-square" style="color:' + getColorCo2(grades[i] + 1) + '"></i> ' +
-          grades[i] + (grades[i + 1] ? '&ndash;' + (grades[i + 1]- 0.01) + '<br>' : '+');
+          grades[i] + (grades[i + 1] ? '&ndash;' + (grades[i + 1]- 1) + '<br>' : '+');
         }
       }
 
@@ -232,19 +237,11 @@ export class MapComponent implements OnInit {
       details.update();
     }
 
-    //function to zoom to clicked state
-    function zoomFeature(e) {
-      console.log('fit', e.target._bounds._northEast);
-      //this.map.flyToBounds([[e.target._bounds._northEast.lat, e.target._bounds._northEast.lng],
-      //e.target._bounds._southWest.lat, e.target._bounds._southWest.lng])
-    }
-
     //function to set effects for eachfeature
     function mouseEffects(feature, layer){
       layer.on({
         mouseover: highlight,
         mouseout: resetHighlight,
-        click: zoomFeature
       });
     }
 
@@ -295,8 +292,5 @@ export class MapComponent implements OnInit {
     }
     
     });
-    console.log('exito');
-
   }
-
 }
