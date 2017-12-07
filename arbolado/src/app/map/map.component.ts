@@ -12,8 +12,6 @@ export class MapComponent implements OnInit {
 
   data: any;
   map: any;
-  corner1 = [40.313701, -130.480714];
-  corner2 = [5.156748, -74.840222];
   co2 = [];
   treeLoss = [];
   year = 2001;
@@ -24,7 +22,7 @@ export class MapComponent implements OnInit {
 
     //set base characteristics
     this.map = L.map('mapid',{
-      center: [23.132442, -102.852647],
+      center: [20.132442, -102.852647],
       zoom: 4,
       maxZoom: 5.5,
       minZoom: 2.5,
@@ -33,7 +31,7 @@ export class MapComponent implements OnInit {
       maxBoundsViscosity: 0.9,
     });
 
-    //set styles functions
+  //set styles functions
     function getColorTreeLoss(d) {
       return d > 5000 ? '#800026' :
              d > 4500  ? '#BD0026' :
@@ -120,8 +118,8 @@ export class MapComponent implements OnInit {
 
     //Define set of layers
     var baseLayers = {
-      "Layer 1": layer1,
-      "Layer 2": layer2
+      "Hectáreas perdidas": layer1,
+      "Emisiones de CO2": layer2
     }
 
     var overLayers = {
@@ -129,7 +127,7 @@ export class MapComponent implements OnInit {
       "Over 2": overlay2
     }
 
-    var currentLayer = "Layer 1";
+    var currentLayer = "Hectáreas perdidas";
     
 
   //info controls
@@ -144,7 +142,7 @@ export class MapComponent implements OnInit {
 
     details.update = (prop) => {
       //set details according to layer data
-      if(currentLayer == 'Layer 1'){
+      if(currentLayer == 'Hectáreas perdidas'){
 
         //find state and year wanted
         var propData = prop ? this.treeLoss.filter((obj)=>{
@@ -156,7 +154,7 @@ export class MapComponent implements OnInit {
         //write it on 
         details._div.innerHTML = '<h4>Deforestación en México</h4>' + 
         (prop ? '<b>' + prop.admin_name +  '</b><br />' + propData + ' ha perdidas'
-        : 'Hover over a state');
+        : 'Selecciona un estado');
       }
       else{
 
@@ -173,7 +171,7 @@ export class MapComponent implements OnInit {
 
         details._div.innerHTML = '<h4>Deforestación en México</h4>' + 
         (prop ? '<b>' + prop.admin_name +  '</b><br />' + propData + ' toneladas de CO2 emitidas' 
-        : 'Hover over a state');
+        : 'Selecciona un estado');
       }
     }
 
@@ -192,7 +190,7 @@ export class MapComponent implements OnInit {
     legend.update = function(layer){
       this._div.innerHTML = '';
 
-      if (currentLayer == 'Layer 1'){//change for layer's name
+      if (currentLayer == 'Hectáreas perdidas'){//change for layer's name
         var grades = [0, 500, 1500, 2500, 3500, 4000, 4500, 5000];
         for (var i = 0; i < grades.length; i++){
           this._div.innerHTML += '<i class="fa fa-square" style="color:' + getColorTreeLoss(grades[i] + 1) + '"></i> ' +
@@ -250,7 +248,7 @@ export class MapComponent implements OnInit {
     L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
       attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
       maxZoom: 18,
-      id: 'mapbox.light',
+      id: 'mapbox.streets',
       accessToken: 'pk.eyJ1Ijoic2F0aXJhbWEiLCJhIjoiY2phcmhpZWxjNGppaDJ3cGwyYmp0NGVtZyJ9.1E3t6hV_CYLzQ_0Ba1IFmQ'
     }).addTo(this.map);
 

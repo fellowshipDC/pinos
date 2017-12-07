@@ -1,10 +1,17 @@
 #mapid 
     min-height 400px
     min-width 150px
-    .info
-        background-color gray 
-        
-@media screen and (max-width: 991px)
-    .container-fluid .row .mapcol 
-        #mapid .info.legend
-            display none
+    &::ng-deep
+        .info
+            background-color #f1f1f1
+            opacity 0.7
+            text-align left
+            h4  
+                font-size 25px
+
+
+@media screen and (max-width: 991px) 
+    #mapid
+        &::ng-deep
+            .info.legend
+                display none

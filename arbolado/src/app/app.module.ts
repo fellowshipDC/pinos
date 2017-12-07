@@ -8,6 +8,8 @@ import { AppComponent } from './app.component';
 import { FormComponent } from './form/form.component';
 import { MapComponent } from './map/map.component';
 import { GraphComponent } from './graph/graph.component';
+import { IntroComponent } from './intro/intro.component';
+import { InfomexicoComponent } from './infomexico/infomexico.component';
 
 
 @NgModule({
@@ -15,7 +17,9 @@ import { GraphComponent } from './graph/graph.component';
     AppComponent,
     FormComponent,
     MapComponent,
-    GraphComponent
+    GraphComponent,
+    IntroComponent,
+    InfomexicoComponent
   ],
   imports: [
     BrowserModule,
