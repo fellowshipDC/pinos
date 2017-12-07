@@ -26,7 +26,7 @@ export class MapComponent implements OnInit {
     //set base characteristics
     this.map = L.map('mapid',{
       center: [23.132442, -102.852647],
-      zoom: 4.5,
+      zoom: 4.25,
       maxZoom: 5.5,
       minZoom: 3,
       zoomSnap: 0,
@@ -47,7 +47,7 @@ export class MapComponent implements OnInit {
                         '#FFEDA0';
     }
 
-    var styleStates1 = (feature) => {
+    var styleStatesTreeLoss = (feature) => {
       var featureStateId = feature.properties.sub_nat_id;//find the state to be styled
       //find the year wanted
       var forYear = this.treeLoss.filter((obj)=>{ 
@@ -55,7 +55,7 @@ export class MapComponent implements OnInit {
           return true;
         }
       })
-      //find the state in db
+      //find the state in data
       for (var i = 0; i < forYear.length; i++){
         if(forYear[i].sub_nat_id == featureStateId){
           return {
@@ -70,33 +70,45 @@ export class MapComponent implements OnInit {
       }
     }
 
-    function getColor2(d) {
-      return d > 30 ? '#034e7b' :
-             d > 26  ? '#0570b0' :
-             d > 22  ? '#3690c0' :
-             d > 18  ? '#74a9cf' :
-             d > 14   ? '#a6bddb' :
-             d > 10   ? '#d0d1e6' :
-             d > 6   ? '#ece7f2' :
+    function getColorCo2(d) {
+      return d > 3.5 ? '#034e7b' :
+             d > 2.5  ? '#0570b0' :
+             d > 1.5  ? '#3690c0' :
+             d > 0.5  ? '#74a9cf' :
+             d > 0.3   ? '#a6bddb' :
+             d > 0.2   ? '#d0d1e6' :
+             d > 0.1   ? '#ece7f2' :
                         '#fff7fb';
     }
 
-    function styleStates2(feature) {
-      return {
-          fillColor: getColor2(feature.properties.sub_nat_id),
+    var styleStatesCo2 = (feature)=> {
+      var featureStateId = feature.properties.sub_nat_id;//find the state to be styled
+      //find the year wanted
+      var forYear = this.co2.filter((obj)=>{ 
+        if(obj.year == this.year){
+          return true;
+        }
+      })
+      //find state and year in data
+      for (var i = 0; i < forYear.length; i++){
+        if(forYear[i].sub_nat_id == featureStateId){
+          return {
+          fillColor: getColorCo2(forYear[i].value),
           weight: 2,
           opacity: 1,
           color: 'white',
           dashArray: '3',
           fillOpacity: 0.7
+          }
+        }
       };
     }
 
     
   //Map layers 
     //Base layers (deforestation rate & Co2 mt2 emmissions)
-    var layer1 = L.geoJson(states, {style: styleStates1, onEachFeature: mouseEffects}).addTo(this.map);
-    var layer2 = L.geoJson(states, {style: styleStates2, onEachFeature: mouseEffects});
+    var layer1 = L.geoJson(states, {style: styleStatesTreeLoss, onEachFeature: mouseEffects}).addTo(this.map);
+    var layer2 = L.geoJson(states, {style: styleStatesCo2, onEachFeature: mouseEffects});
     
     //Over layers (shows if deforestation occurred in a protected or mining area)
     var overlay11 = L.marker([10.6595382,-100.3494]).bindPopup('This is Littleton, CO.');
@@ -133,20 +145,29 @@ export class MapComponent implements OnInit {
     };
 
     details.update = (prop) => {
-      var propData = prop ? this.treeLoss.filter((obj)=>{
-        if(obj.year == this.year && obj.sub_nat_id == prop.sub_nat_id){
-          return true;
-        }
-      })[0].value.toFixed(2).toLocaleString() : '';
-      
+    //set details according to layer data
       if(currentLayer == 'Layer 1'){
+        //find state and year wanted
+        var propData = prop ? this.treeLoss.filter((obj)=>{
+          if(obj.year == this.year && obj.sub_nat_id == prop.sub_nat_id){
+            return true;
+          }
+        })[0].value.toLocaleString('en-IN',{maximumFractionDigits: 2}) : '';
+        //write it on 
         details._div.innerHTML = '<h4>Deforestación en México</h4>' + 
         (prop ? '<b>' + prop.admin_name +  '</b><br />' + propData + ' ha perdidas'
         : 'Hover over a state');
       }
       else{
+        //find state and year wanted
+        var propData = prop ? this.co2.filter((obj)=>{
+          if(obj.year == this.year && obj.sub_nat_id == prop.sub_nat_id){
+            return true;
+          }
+        })[0].value.toLocaleString('en-IN',{maximumFractionDigits: 2}) : '';
+        //write it on
         details._div.innerHTML = '<h4>Deforestación en México</h4>' + 
-        (prop ? '<b>' + prop.admin_name +  '</b><br />' + 'mt2CO2 emitidos' + prop.sub_nat_id 
+        (prop ? '<b>' + prop.admin_name +  '</b><br />' + propData + 'mt<sup>2</sup>CO2 emitidos' 
         : 'Hover over a state');
       }
     }
@@ -174,10 +195,10 @@ export class MapComponent implements OnInit {
         }
       }
       else{
-        var grades = [0, 500, 1500, 2500, 3500, 4000, 4500, 5000];
+        var grades = [0, 0.1, 0.2, 0.3, 0.5, 1.5, 2.5, 3.5];
         for (var i = 0; i < grades.length; i++){
-          this._div.innerHTML += '<i class="fa fa-square" style="color:' + getColor2(grades[i] + 1) + '"></i> ' +
-          grades[i] + (grades[i + 1] ? '&ndash;' + (grades[i + 1]-1) + '<br>' : '+');
+          this._div.innerHTML += '<i class="fa fa-square" style="color:' + getColorCo2(grades[i] + 1) + '"></i> ' +
+          grades[i] + (grades[i + 1] ? '&ndash;' + (grades[i + 1]- 0.01) + '<br>' : '+');
         }
       }
 
