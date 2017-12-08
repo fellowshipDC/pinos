@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { states } from './mexican_states';
 import * as L from 'leaflet';
+import { MatSliderModule } from '@angular/material';
 
 @Component({
   selector: 'app-map',
@@ -173,7 +174,7 @@ export class MapComponent implements OnInit {
         (prop ? '<b>' + prop.admin_name +  '</b><br />' + propData + ' toneladas de CO2 emitidas' 
         : 'Selecciona un estado');
       }
-    }
+    };
 
     details.addTo(this.map);
     
@@ -185,7 +186,7 @@ export class MapComponent implements OnInit {
       this.update();
       
       return this._div;
-    }
+    };
 
     legend.update = function(layer){
       this._div.innerHTML = '';
@@ -206,7 +207,7 @@ export class MapComponent implements OnInit {
       }
 
       
-    }
+    };
 
     legend.addTo(this.map);
   
@@ -254,7 +255,7 @@ export class MapComponent implements OnInit {
 
     //Add layers with control and track current layer
     L.control.layers(baseLayers, overLayers).addTo(this.map);
-    this.map.on('baselayerchange', function(e){
+    this.map.on('baselayerchange', (e) => {
       currentLayer = e.name;//updates layer
       legend.update(currentLayer);//updates legend
     })
@@ -290,5 +291,11 @@ export class MapComponent implements OnInit {
     }
     
     });
+  }
+
+  changeYear(year) {
+    this.year = year;
+    this.map.getLayer().redraw();
+    console.log(year);
   }
 }

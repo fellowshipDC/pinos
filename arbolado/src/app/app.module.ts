@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
+import { MatSliderModule } from '@angular/material';
 
 import { AppRoutingModule } from './app-routing.module';
 
@@ -24,7 +25,8 @@ import { InfomexicoComponent } from './infomexico/infomexico.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpModule
+    HttpModule,
+    MatSliderModule
   ],
   providers: [],
   bootstrap: [AppComponent]
