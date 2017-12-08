@@ -1,20 +1,25 @@
 <div class="container-fluid">
   <div class="row d-flex justify-content-center">
-    <div class="explora col-md-2">
+    <div class="explora col-lg-2">
       <h4>Explora los datos</h4>
       <hr>
-      <p>Problema a visualizar:
+      <p>Visualiza:
         <br>
-        Hectáreas deforestadas
+        Hectáreas deforestadas y
         <br>
         Toneladas de CO2 emitidas por deforestación
       </p>
       <hr>
-      <p>Año de análisis</p>
-      <mat-slider #slide min="2001" max="2016" step="1" thumbLabel (change)="changeYear(slide.value)"></mat-slider>      
+      Observa si la deforestación ocurrió en zonas mineras o
+      áreas protegidas.
+      <hr>
+      <p>Selecciona
+        <br>
+        Año de análisis</p>
+      <mat-slider #slide min="2001" max="2016" step="1" thumbLabel (change)="changeYear(slide.value); setmap()"></mat-slider>            
     </div>
   
-    <div class="mapcol col-md-8 col-sm-10 text-center">
+    <div class="mapcol col-lg-8 col-md-10 text-center">
       <div id="mapid" class="text-center"></div>
     </div>
   </div>

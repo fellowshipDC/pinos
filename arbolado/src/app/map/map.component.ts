@@ -12,10 +12,12 @@ import { MatSliderModule } from '@angular/material';
 export class MapComponent implements OnInit {
 
   data: any;
-  map: any;
+  map = null;
   co2 = [];
   treeLoss = [];
   year = 2001;
+  center = [20.132442, -102.852647];
+  zoom = 4;
   
   constructor(private http: Http) { }
 
@@ -23,14 +25,13 @@ export class MapComponent implements OnInit {
 
     //set base characteristics
     this.map = L.map('mapid',{
-      center: [20.132442, -102.852647],
-      zoom: 4,
       maxZoom: 5.5,
       minZoom: 2.5,
       zoomSnap: 0,
       zoomDelta: 0.25,
       maxBoundsViscosity: 0.9,
     });
+    this.map.setView(this.center, this.zoom);
 
   //set styles functions
     function getColorTreeLoss(d) {
@@ -295,7 +296,10 @@ export class MapComponent implements OnInit {
 
   changeYear(year) {
     this.year = year;
-    this.map.getLayer().redraw();
-    console.log(year);
+    if(this.map !== undefined|| this.map !== null){
+      this.center = this.map.getCenter();
+      this.zoom = this.map.getZoom();
+      this.map.remove();
+    }
   }
 }
