@@ -216,10 +216,10 @@ export class MapComponent implements OnInit {
       var layer = e.target;
   
       layer.setStyle({
-          weight: 5,
+          weight: 3,
           color: '#666666',
           dashArray: '',
-          fillOpacity: 0.7
+          fillOpacity: 1
       });
   
       if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
