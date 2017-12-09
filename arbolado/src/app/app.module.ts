@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 import { MatSliderModule } from '@angular/material';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -26,6 +27,7 @@ import { InfomexicoComponent } from './infomexico/infomexico.component';
     BrowserModule,
     AppRoutingModule,
     HttpModule,
+    HttpClientModule,
     MatSliderModule
   ],
   providers: [],

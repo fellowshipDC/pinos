@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Http, Response, Headers } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-form',
@@ -9,22 +9,25 @@ import { Http, Response, Headers } from '@angular/http';
 export class FormComponent implements OnInit {
 
   formSent: any;
-  url= 'http://localhost:3000/forest/form';
-  data= {opinion: 'as'};
+  url = 'http://localhost:3000/forest/form';
+  data = { opinion: 'as' };
 
-  constructor(private http: Http) { }
+  constructor(private http: HttpClient) { }
 
   ngOnInit() {
   }
 
-  submit(){
-    console.log('submit button works');
-    var headrs = new Headers();
-    headrs.append('Content-Type', 'application/json');
-    headrs.append('Accept', 'application/json');
-
-    this.http.post(this.url, this.data, {headers: headrs})
-    .subscribe((res: Response)=> {this.formSent = res.json(); console.log('done');})
+  submit() {
+    this.http
+      .post(this.url, this.data)
+      .subscribe(
+        res => {
+          console.log(res);
+        },
+        err => {
+          console.log('error');
+        }
+      );
   }
 
 }
