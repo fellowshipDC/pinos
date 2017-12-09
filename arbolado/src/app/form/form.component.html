@@ -9,56 +9,52 @@
       </p>
     </div>
     <div class="form col-lg-6 col-md-8">
-      <form>
-        <div class="form-group">
-          <p>¿Crees que México alcanzará la meta de cero de emisiones 
-              por cambios de uso del suelo forestal para el 2020?</p>
-          <div class="form-check">
-            <label class="form-check-label">
-              <input class="form-check-input" type="radio" value="option1" checked>
-              Sí
-            </label>
-          </div>
-          <div class="form-check">
-            <label class="form-check-label">
-              <input class="form-check-input" type="radio" value="option2">
-              No
-            </label>
-          </div>
+      <div class="form-group">
+        <p>¿Crees que México alcanzará la meta de cero de emisiones
+            por cambios de uso del suelo forestal para el 2020?</p>
+        <div class="form-check">
+          <label class="form-check-label">
+            <input class="form-check-input" type="radio" value="option1" checked>
+            Sí
+          </label>
         </div>
-      </form>
-      <form>
-        <div class="form-group">
-          <p>¿Cuál crees que es el sector que genera mayores emisiones de CO2?</p>
-          <div class="form-check">
-            <label class="form-check-label">
-              <input class="form-check-input" type="radio" value="option1" checked>
-              Sector Industrial (excluyendo energético)
-            </label>
-          </div>
-          <div class="form-check">
-            <label class="form-check-label">
-              <input class="form-check-input" type="radio" value="option2">
-              Sector agrícola
-            </label>
-          </div>
-          <div class="form-check">
-            <label class="form-check-label">
-              <input class="form-check-input" type="radio" value="option3">
-              Sector energético
-            </label>
-          </div>
-          <div class="form-check">
-            <label class="form-check-label">
-              <input class="form-check-input" type="radio" value="option4">
-              Sector Transportes
-            </label>
-          </div>
+        <div class="form-check">
+          <label class="form-check-label">
+            <input class="form-check-input" type="radio" value="option2">
+            No
+          </label>
         </div>
-        <div class="text-center">
-          <button type="submit" class="btn btn-primary" (click)="submit()">Ve las respuestas</button>
+      </div>
+      <div class="form-group">
+        <p>¿Cuál crees que es el sector que genera mayores emisiones de CO2?</p>
+        <div class="form-check">
+          <label class="form-check-label">
+            <input class="form-check-input" type="radio" value="option1" checked>
+            Sector Industrial (excluyendo energético)
+          </label>
         </div>
-      </form>
+        <div class="form-check">
+          <label class="form-check-label">
+            <input class="form-check-input" type="radio" value="option2">
+            Sector agrícola
+          </label>
+        </div>
+        <div class="form-check">
+          <label class="form-check-label">
+            <input class="form-check-input" type="radio" value="option3">
+            Sector energético
+          </label>
+        </div>
+        <div class="form-check">
+          <label class="form-check-label">
+            <input class="form-check-input" type="radio" value="option4">
+            Sector Transportes
+          </label>
+        </div>
+      </div>
+      <div class="text-center">
+        <button type="button" class="btn btn-primary" (click)="submit()">Ve las respuestas</button>
+      </div>
     </div>
   </div>
 </div>
