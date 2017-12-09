@@ -11,6 +11,7 @@ import { MapComponent } from './map/map.component';
 import { GraphComponent } from './graph/graph.component';
 import { IntroComponent } from './intro/intro.component';
 import { InfomexicoComponent } from './infomexico/infomexico.component';
+import { HeaderComponent } from './header/header.component';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import { InfomexicoComponent } from './infomexico/infomexico.component';
     MapComponent,
     GraphComponent,
     IntroComponent,
-    InfomexicoComponent
+    InfomexicoComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,
