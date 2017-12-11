@@ -13,6 +13,7 @@ import { GraphComponent } from './graph/graph.component';
 import { IntroComponent } from './intro/intro.component';
 import { InfomexicoComponent } from './infomexico/infomexico.component';
 import { HeaderComponent } from './header/header.component';
+import { HomeComponent } from './home/home.component';
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import { HeaderComponent } from './header/header.component';
     GraphComponent,
     IntroComponent,
     InfomexicoComponent,
-    HeaderComponent
+    HeaderComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,

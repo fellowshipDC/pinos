@@ -6,16 +6,6 @@ var assert = require('assert');
 //Get data from mongoDB
 
 var url = 'mongodb://localhost:27017/pinos';
-var findDocuments = function(db, callback){
-    //get collection
-    var collection = db.collection('documents');
-    //get documents
-    collection.find().toArray(function(err, docs) {
-        console.log("Found the following records");
-        console.dir(docs);
-        callback(docs);
-    });
-}
 
 router.get('/', function(req, res, next){
     //get mongo connection
@@ -26,10 +16,22 @@ router.get('/', function(req, res, next){
         var col = db.collection('forestwatch');
         col.find({}).toArray(function(err, docs) {
             console.log("Found the following records");
-            db.close();
-            res.json({status: 200, data: docs});            
+            res.json({status: 200, data: docs}); 
+            db.close();            
         });
     })
+})
+
+router.post('/form', (req, res, next) =>{
+    res.send('POST request to the homepage');
+    /*Check connection first
+    MongoClient.connect(url, function(err, db){
+        assert.equal(null, err);
+        console.log("Ready to post");
+        var col = db.collection('opinion');
+        col.insert(req)
+        res.json({status: 'posted'});
+    });*/
 })
 
 router.get('/country/mt2', function(req, res, next){
