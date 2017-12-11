@@ -14,6 +14,9 @@
             margin-bottom 30px
         p a   
             color #3F3F3F
+            text-decoration underline
+        p a:hover
+            color #7C7C7C
         hr   
             margin-top 5%
     .form
@@ -23,20 +26,32 @@
             margin-bottom 20px
         .form-check .form-check-label
             margin-left 50px
-
+        .seemore
+            line-height 30px
+            font-weight 700
+            #discover1, #discover2
+                margin-left 30px
+                display none
 
 @media screen and (max-width: 767)
     .container-fluid .row 
         .text
             h3
                 font-size 60px  
-        .form .form-check .form-check-label
-            margin auto
+        .form 
+            .form-check .form-check-label
+                margin auto
+            .seemore
+                font-size 17px
 @media screen and (max-width: 575px)
-    .container-fluid .row .text
-        h3
-            font-size 50px
-        p.lead
-            font-size 25px
+    .container-fluid .row 
+        .text
+            h3
+                font-size 50px
+            p.lead
+                font-size 25px
+        .form    
+            .seemore
+                font-size 14px
 
         

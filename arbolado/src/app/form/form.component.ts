@@ -12,17 +12,20 @@ export class FormComponent implements OnInit {
   url = 'http://localhost:3000/forest/form';
   data = { opinion: 'as' };
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   ngOnInit() {
   }
 
   submit() {
+    document.getElementById('discover1').style.display = 'inline';
+    document.getElementById('discover2').style.display = 'inline';
+    
     this.http
       .post(this.url, this.data)
       .subscribe(
         res => {
-          console.log(res);
+          console.log(res, 'ok');
         },
         err => {
           console.log('error');
