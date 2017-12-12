@@ -23,15 +23,15 @@ router.get('/', function(req, res, next){
 })
 
 router.post('/form', (req, res, next) =>{
-    res.send('POST request to the homepage');
-    /*Check connection first
+    //Check connection first
     MongoClient.connect(url, function(err, db){
         assert.equal(null, err);
         console.log("Ready to post");
         var col = db.collection('opinion');
-        col.insert(req)
-        res.json({status: 'posted'});
-    });*/
+        console.log(req);
+        //col.insert(req);
+        res.json({status: 200, response:'POST request to the homepage'});
+    });
 })
 
 router.get('/country/mt2', function(req, res, next){
