@@ -3,7 +3,7 @@
     <div class="text col-lg-10 col-md-10 text-center">
       <h3>¡Tenemos que detener esto!</h3>
       <p class="lead">¡Súmate a nuestro esfuerzo colectivo!</p>
-      <p><a href="http://www.globalforestwatch.org/" target="_blank">Infórmate.</a> 
+      <p><a href="http://www.globalforestwatch.org/" target="_blank">Infórmate.</a>
         <a href="https://twitter.com/intent/tweet?text=La+deforestaci%C3%B3n+en+M%C3%A9xico+alcanz%C3%B3+su+segundo+nivel+m%C3%A1s+alto%2C+en+los+%C3%BAltimos+quince+a%C3%B1os%2C+en+2016.+Hay+que+informarnos+c%C3%B3mo+ha+progresado%2C+c%C3%B3mo+nos+afecta+y+qu%C3%A9+podemos+hacer.&hashtags=forestwatch" target="_blank">
           Difunde.</a>
         <a href="http://www.wri.org/blog/2017/10/two-rules-thumb-slash-environmental-impact-your-diet" target="_blank">Consume responsablente.</a>
@@ -18,13 +18,21 @@
         <div id="form1">
           <div class="form-check">
             <label class="form-check-label">
-              <input class="form-check-input" type="radio" value="option1" checked>
+              <input
+                class="form-check-input"
+                type="radio"
+                [value]="data.target.yes.value"
+                [checked]="data.target.yes.checked">
               Sí
             </label>
           </div>
           <div class="form-check">
             <label class="form-check-label">
-              <input class="form-check-input" type="radio" value="option2">
+              <input
+                class="form-check-input"
+                type="radio"
+                [value]="data.target.no.value"
+                [checked]="data.target.no.checked">
               No
             </label>
           </div>
@@ -39,7 +47,7 @@
       </div>
       <div class="form-group">
         <p>¿Cuál crees que es el sector que genera mayores emisiones de CO2?<br></p>
-        <div id="form2">            
+        <div id="form2">
           <div class="form-check">
             <label class="form-check-label">
               <input class="form-check-input" type="radio" value="option1" checked>
@@ -68,8 +76,8 @@
       </div>
       <div class="seemore">
         <i class="fa fa-chevron-right" aria-hidden="true"></i>
-        <p id="discover2">El sector energético ocupa el primer lugar, siendo responsable del 25% de las emisiones, 
-          seguido del sector agrícola con el 24%. Los cambios en la demanda generan presión en la 
+        <p id="discover2">El sector energético ocupa el primer lugar, siendo responsable del 25% de las emisiones,
+          seguido del sector agrícola con el 24%. Los cambios en la demanda generan presión en la
           política pública y en la industria. Lee un ejemplo sobre el alcance de la microacción
         <a href="http://www.wri.org/blog/2016/04/how-i-tweaked-my-diet-cut-its-environmental-footprint-half" target="_blank"><i class="fa fa-external-link" aria-hidden="true"></i></a>
           y por qué es importante.

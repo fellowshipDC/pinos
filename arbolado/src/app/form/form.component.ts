@@ -10,7 +10,20 @@ export class FormComponent implements OnInit {
 
   formSent: any;
   url = 'http://localhost:3000/forest/form';
-  data = { opinion: 'as' };
+  data = {
+    target: {
+      yes: {
+        value: 'si',
+        checked: false
+      },
+      no: {
+        value: 'no',
+        checked: false
+      }
+    },
+    sector: {
+    }
+  };
 
   constructor(private http: HttpClient) {}
 
@@ -22,7 +35,7 @@ export class FormComponent implements OnInit {
     document.getElementById('discover2').style.display = 'inline';
     document.getElementById('form1').style.display = 'none';
     document.getElementById('form2').style.display = 'none';
-/*
+
     this.http
       .post(this.url, this.data)
       .subscribe(
@@ -33,7 +46,6 @@ export class FormComponent implements OnInit {
           console.log('error');
         }
       );
-    */
   }
 
 }
