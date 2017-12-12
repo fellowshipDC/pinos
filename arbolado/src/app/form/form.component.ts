@@ -20,7 +20,9 @@ export class FormComponent implements OnInit {
   submit() {
     document.getElementById('discover1').style.display = 'inline';
     document.getElementById('discover2').style.display = 'inline';
-    
+    document.getElementById('form1').style.display = 'none';
+    document.getElementById('form2').style.display = 'none';
+/*
     this.http
       .post(this.url, this.data)
       .subscribe(
@@ -31,6 +33,7 @@ export class FormComponent implements OnInit {
           console.log('error');
         }
       );
+    */
   }
 
 }

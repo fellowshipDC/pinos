@@ -272,17 +272,71 @@ export class GraphComponent implements OnInit {
 
   ngOnInit() {
     //svg width and height
-    /*var w = 500;
-    var h = 300;
+    var margin = {top: 50, right: 50, bottom: 50, left: 50};
+    var w = 700 - (margin.left + margin.right);
+    var h = 500 - (margin.top + margin.bottom);
+    var parse = d3.timeParse("%b %Y");
 
     var graph = d3.select('#graphid')
       .append('svg')
-      .attr('width', w)
-      .attr('height', h)
+      .attr('width', w + (margin.left + margin.right))
+      .attr('height', h + (margin.top + margin.bottom))
       .attr('id', 'viz')
+      .append('g')
+        .attr('transform', 'translate('+ margin.left + ',' + margin.top + ')');
+
+    var data = this.data.sort((a,b) => d3.ascending(a.year, b.year));
+    var xScale = d3.scaleLinear().domain([0, 15]).range([0, w])
+    var yScale = d3.scaleLinear().domain([70, 0]).range([0, h])
+
+    var line = d3.line()
+      .x(function(d, i) {console.log(i); return xScale(i);})
+      .y(function(d) { console.log(d.value); return yScale(d.value);});
+
+    graph.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + h + ")")
+      .call(d3.axisBottom(xScale));
+
+    graph.append("g")
+      .attr("class", "y axis")
+      .call(d3.axisLeft(yScale));
+
+    var path = graph.append('path')
+      .datum(data)
+      .attr('class', 'line')
+      .attr('d', line);
+
+    graph.selectAll('.dot')
+      .data(data)
+      .enter().append('circle')
+        .attr('class', 'dot')
+        .attr('cx', function(d, i){ return xScale(i) })
+        .attr('cy', function(d){ return yScale(d.value) })
+        .attr('r', 5);
+
+    var curtain = graph.append('rect')
+      .attr('x', -1 * (w  + margin.left))
+      .attr('y', -1 * h)
+      .attr('height', h)
+      .attr('width', w + margin.left)
+      .attr('class', 'curtain')
+      .attr('transform', 'rotate(180)')
+      .style('fill', '#ffffff');
+
+    var t = graph.transition()
+      .delay(750)
+      .duration(6000)
+      .ease(d3.easeLinear);
     
-    //get data and fix scales for x and y coordinates
-    var d = this.data.sort((a,b) => d3.ascending(a.year, b.year));
+    t.select('rect.curtain')
+      .attr('width', 0);
+    t.select('line.guide')
+      .attr('transform', 'translate(' + w + ', 0)')
+
+
+   /* //get data and fix scales for x and y coordinates
+    
     var x = d3.scaleLinear().domain([0, 16]).range([10, w])
     var y = d3.scaleLinear().domain([0, 70]).range([10, h-10])
 
@@ -290,12 +344,12 @@ export class GraphComponent implements OnInit {
     var line = d3.line()
       .x(function(d, i) {return x(i);})
       .y(function(d) {return y(d);});
-      //.interpolate('cardinal')
+      //.interpolate('cardinal')*/
   }
 
   getData() {
-    this.http.get('http://localhost:3000/forest/country/mt2').subscribe((res: Response) => this.req = res.json().data)
-  }*/
+    //this.http.get('http://localhost:3000/forest/country/mt2').subscribe((res: Response) => this.req = res.json().data)
+  }
 }
 
 }
