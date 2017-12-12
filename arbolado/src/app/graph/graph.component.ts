@@ -37,13 +37,18 @@ export class GraphComponent implements OnInit {
 
     //scales
     var xScale = d3.scaleLinear().domain([0, 15]).range([0, w]);
-    var yScaleCo2 = d3.scaleLinear().domain([70, 0]).range([0, h]);
-    var yScaleHa = d3.scaleLinear().domain([300, 140]).range([0, h]);
+    var yScaleCo2 = d3.scaleLinear().domain([70, 20]).range([0, h]);
+    var yScaleHa = d3.scaleLinear().domain([350, 100]).range([0, h]);
 
-    var line = d3.line()
-      .x(function(d, i) {console.log(i); return xScale(i);})
-      .y(function(d) { console.log(d.value); return yScaleCo2(d.value);});
+    var lineCo2 = d3.line()
+      .x(function(d, i) { return xScale(i);})
+      .y(function(d) { return yScaleCo2(d.value);});
 
+    var lineHa = d3.line()
+      .x(function(d, i) { return xScale(i);})
+      .y(function(d) {return yScaleHa(d.value / 1000);});
+
+    //axes
     graph.append("g")
       .attr("class", "x axis")
       .attr("transform", "translate(0," + h + ")")
@@ -58,12 +63,17 @@ export class GraphComponent implements OnInit {
       .attr("transform", "translate("+ w + ", 0)")
       .call(d3.axisRight(yScaleHa));
 
-    var path = graph.append('path')
-      .datum(co2)
+    var pathCo2 = graph.append('path')
+      .data([co2])
       .attr('class', 'lineCo2')
-      .attr('d', line);
+      .attr('d', lineCo2);
 
-    graph.selectAll('.dot')
+    var pathHa = graph.append('path')
+      .data([ha])
+      .attr('class', 'lineHa')
+      .attr('d', lineHa);    
+  
+    graph.selectAll('.dotCo2')
       .data(co2)
       .enter().append('circle')
         .attr('class', 'dotCo2')
@@ -71,6 +81,14 @@ export class GraphComponent implements OnInit {
         .attr('cy', function(d){ return yScaleCo2(d.value) })
         .attr('r', 5);
 
+    graph.selectAll('.dotHa')
+      .data(ha)
+      .enter().append('circle')
+        .attr('class', 'dotHa')
+        .attr('cx', function(d, i){ return xScale(i) })
+        .attr('cy', function(d){ return yScaleHa(d.value / 1000) })
+        .attr('r', 5);
+  
     var curtain = graph.append('rect')
       .attr('x', -1 * (w  + margin.left))
       .attr('y', -1 * h)
@@ -87,8 +105,6 @@ export class GraphComponent implements OnInit {
 
     t.select('rect.curtain')
       .attr('width', 0);
-    t.select('line.guide')
-      .attr('transform', 'translate(' + w + ', 0)')
   }
 
   ngOnInit() {
