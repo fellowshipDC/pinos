@@ -8,7 +8,7 @@ import * as d3 from 'd3';
   styleUrls: ['./graph.component.styl']
 })
 export class GraphComponent implements OnInit {
-  
+
   //req: any;
   data = [
     {
@@ -328,7 +328,7 @@ export class GraphComponent implements OnInit {
       .delay(750)
       .duration(6000)
       .ease(d3.easeLinear);
-    
+
     t.select('rect.curtain')
       .attr('width', 0);
     t.select('line.guide')
@@ -336,7 +336,7 @@ export class GraphComponent implements OnInit {
 
 
    /* //get data and fix scales for x and y coordinates
-    
+
     var x = d3.scaleLinear().domain([0, 16]).range([10, w])
     var y = d3.scaleLinear().domain([0, 70]).range([10, h-10])
 
@@ -350,6 +350,4 @@ export class GraphComponent implements OnInit {
   getData() {
     //this.http.get('http://localhost:3000/forest/country/mt2').subscribe((res: Response) => this.req = res.json().data)
   }
-}
-
 }
