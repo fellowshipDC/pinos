@@ -14,7 +14,7 @@ export class FormComponent implements OnInit {
     target: {
       yes: {
         value: 'si',
-        checked: false
+        checked: true
       },
       no: {
         value: 'no',
@@ -22,6 +22,22 @@ export class FormComponent implements OnInit {
       }
     },
     sector: {
+      industrial: {
+        value: 'industrial',
+        checked: true
+      },
+      agricola: {
+        value: 'agricola',
+        checked: false
+      },
+      energetico: {
+        value: 'energetico',
+        checked: false
+      },
+      transporte: {
+        value: 'transporte',
+        checked: false
+      }
     }
   };
 

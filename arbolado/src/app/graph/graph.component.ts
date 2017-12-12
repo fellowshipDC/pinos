@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 import * as d3 from 'd3';
 
 @Component({
@@ -9,7 +9,7 @@ import * as d3 from 'd3';
 })
 export class GraphComponent implements OnInit {
 
-  //req: any;
+  info: any;
   data = [
     {
       "indicator_id": 14,
@@ -268,9 +268,9 @@ export class GraphComponent implements OnInit {
       "units": "MtC02"
     }
   ]
-  constructor(private http: Http) { }
+  constructor(private http: HttpClient) { }
 
-  ngOnInit() {
+  d3graph(){
     //svg width and height
     var margin = {top: 50, right: 50, bottom: 50, left: 50};
     var w = 700 - (margin.left + margin.right);
@@ -333,21 +333,30 @@ export class GraphComponent implements OnInit {
       .attr('width', 0);
     t.select('line.guide')
       .attr('transform', 'translate(' + w + ', 0)')
+  }
 
-
-   /* //get data and fix scales for x and y coordinates
-
-    var x = d3.scaleLinear().domain([0, 16]).range([10, w])
-    var y = d3.scaleLinear().domain([0, 70]).range([10, h-10])
-
-    //create line function with scale and interpolation
-    var line = d3.line()
-      .x(function(d, i) {return x(i);})
-      .y(function(d) {return y(d);});
-      //.interpolate('cardinal')*/
+  ngOnInit() {
+    //this.d3graph();
+    this.getData();
   }
 
   getData() {
-    //this.http.get('http://localhost:3000/forest/country/mt2').subscribe((res: Response) => this.req = res.json().data)
+    this.http.get('http://localhost:3000/forest/')
+      .subscribe(
+        res => {
+          console.log('requested');
+          this.info = res.data.filter((obj)=>{
+            if (obj.indicator_id == 14 && obj.sub_nat_id == undefined && obj.boundary_id ==1 && obj.thresh == 10){
+              return true;
+            }
+            else{
+              return false;
+            }
+          });
+        },
+        err => {
+          console.log('error');
+        }
+      )
   }
 }
