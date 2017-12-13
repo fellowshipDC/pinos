@@ -20,7 +20,6 @@ export class GraphComponent implements OnInit {
     var margin = {top: 50, right: 50, bottom: 50, left: 50};
     var w = 700 - (margin.left + margin.right);
     var h = 500 - (margin.top + margin.bottom);
-    var parse = d3.timeParse("%b %Y");
 
     //graph svg
     var graph = d3.select('#graphid')
@@ -36,16 +35,16 @@ export class GraphComponent implements OnInit {
     var ha = this.dataHa.sort((a,b) => d3.ascending(a.year, b.year));
 
     //scales
-    var xScale = d3.scaleLinear().domain([0, 15]).range([0, w]);
+    var xScale = d3.scaleLinear().domain([(2001), (2016)]).range([0, w]);
     var yScaleCo2 = d3.scaleLinear().domain([70, 20]).range([0, h]);
     var yScaleHa = d3.scaleLinear().domain([350, 100]).range([0, h]);
 
     var lineCo2 = d3.line()
-      .x(function(d, i) { return xScale(i);})
+      .x(function(d, i) { console.log((d.year)); return xScale((d.year));})
       .y(function(d) { return yScaleCo2(d.value);});
 
     var lineHa = d3.line()
-      .x(function(d, i) { return xScale(i);})
+      .x(function(d, i) { console.log((d.year)); return xScale((d.year));})
       .y(function(d) {return yScaleHa(d.value / 1000);});
 
     //axes
@@ -108,7 +107,7 @@ export class GraphComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getData();
+    //this.getData();
   }
 
   getData() {

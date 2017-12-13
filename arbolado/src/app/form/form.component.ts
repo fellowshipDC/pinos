@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import * as d3 from 'd3';
 
 @Component({
   selector: 'app-form',
@@ -40,10 +41,71 @@ export class FormComponent implements OnInit {
       }
     }
   };
+  info: any;
+  graphInfo: any;
 
   constructor(private http: HttpClient) {}
 
   ngOnInit() {
+  }
+
+  checkedRadio1(value){
+    value.yes.checked = !value.yes.checked;
+    value.no.checked = !value.no.checked;
+  }
+
+  checkedRadio2(value){
+    const keys = Object.keys(this.data.sector);
+    for (var i = 0; i < keys.length; i++){
+      if (value !== keys[i] && this.data.sector[keys[i]].checked === true){
+        this.data.sector[keys[i]].checked = false;
+      }
+    }
+    value.checked = !value.checked;
+  }
+
+  graphTarget(){
+    var checkedYes = this.graphInfo.filter((el)=>{
+      if (el.target.yes.checked){
+        return true;
+      }
+    })
+    var target = {
+      'Sí': (checkedYes.length / this.graphInfo.length),
+      'No': (1 - checkedYes.length / this.graphInfo.length)
+    }
+  }
+
+  graphSector(){
+    var checkedIndustrial = this.graphInfo.filter((el)=>{
+      if (el.sector.industrial.checked){
+        return true;
+      }
+    }),
+    checkedAgricola = this.graphInfo.filter((el)=>{
+      if (el.sector.agricola.checked){
+        return true;
+      }
+    }),
+    checkedEnergetico = this.graphInfo.filter((el)=>{
+      if (el.sector.energetico.checked){
+        return true;
+      }
+    }),
+    checkedTransporte = this.graphInfo.filter((el)=>{
+      if (el.sector.transporte.checked){
+        return true;
+      }
+    });
+
+    var sector = {
+      'Industrial' : (checkedIndustrial.length / this.graphInfo.length),
+      'Agrícola' : (checkedAgricola.length / this.graphInfo.length),
+      'Energético' : (checkedEnergetico.length / this.graphInfo.length),
+      'Transporte' : (checkedTransporte.length / this.graphInfo.length)
+    }
+
+
   }
 
   submit() {
@@ -56,7 +118,12 @@ export class FormComponent implements OnInit {
       .post(this.url, this.data)
       .subscribe(
         res => {
-          console.log(res, 'ok');
+          this.info = res;
+          if (this.info !== undefined || this.info !== null){
+            this.graphInfo = this.info.response;
+            this.graphTarget();
+            this.graphSector();
+          };
         },
         err => {
           console.log('error');

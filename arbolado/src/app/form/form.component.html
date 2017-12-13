@@ -23,7 +23,8 @@
                 type="radio"
                 name="target"
                 [value]="data.target.yes.value"
-                [checked]="data.target.yes.checked">
+                [checked]="data.target.yes.checked" 
+                (change)="checkedRadio1(data.target)">
               Sí
             </label>
           </div>
@@ -34,7 +35,8 @@
                 type="radio"
                 name="target"
                 [value]="data.target.no.value"
-                [checked]="data.target.no.checked">
+                [checked]="data.target.no.checked" 
+                (change)="checkedRadio1(data.target)">
               No
             </label>
           </div>
@@ -59,8 +61,8 @@
                 class="form-check-input" 
                 type="radio" 
                 [value]="data.sector.industrial.value" 
-                [checked]="data.sector.industrial.checked"
-              >
+                [checked]="data.sector.industrial.checked" 
+                (change)="checkedRadio2(data.sector.industrial)">
               Sector Industrial (excluyendo energético)
             </label>
           </div>
@@ -70,7 +72,8 @@
                 class="form-check-input" 
                 type="radio" 
                 [value]="data.sector.agricola.value"
-                [checked]="data.sector.agricola.checked">
+                [checked]="data.sector.agricola.checked" 
+                (change)="checkedRadio2(data.sector.agricola)">
               Sector agrícola
             </label>
           </div>
@@ -80,7 +83,8 @@
                 class="form-check-input" 
                 type="radio" 
                 [value]="data.sector.energetico.value"
-                [checked]="data.sector.energetico.checked">
+                [checked]="data.sector.energetico.checked" 
+                (change)="checkedRadio2(data.sector.energetico)">
               Sector energético
             </label>
           </div>
@@ -90,13 +94,15 @@
                 class="form-check-input" 
                 type="radio" 
                 [value]="data.sector.transporte.value"
-                [checked]="data.sector.transporte.checked">
-              Sector Transportes
+                [checked]="data.sector.transporte.checked" 
+                (change)="checkedRadio2(data.sector.transporte)">
+              Sector Transporte
             </label>
           </div>
         </div>
       </div>
       <div class="seemore">
+        <div id="sectorgraph"></div>
         <i class="fa fa-chevron-right" aria-hidden="true"></i>
         <p id="discover2">El sector energético ocupa el primer lugar, siendo responsable del 25% de las emisiones,
           seguido del sector agrícola con el 24%. Los cambios en la demanda generan presión en la
