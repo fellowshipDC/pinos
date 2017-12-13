@@ -34,6 +34,36 @@
             #discover1, #discover2
                 margin-left 30px
                 display none
+            #targetgraph 
+                margin-left 60px
+                &::ng-deep
+                    .bar
+                        fill #7C7C7C
+                        .label
+                            font-size 12px
+                            color #3F3F3F
+                            fill #3F3F3F
+                    .y-axis
+                        fill none
+                        stroke #3F3F3F
+                        stroke-opacity 0.2
+                        font-size 13px
+                        color rgba(0,0,0,0.5)
+            #sectorgraph 
+                margin-left 60px
+                &::ng-deep
+                    .bar
+                        fill #7C7C7C
+                        .label
+                            font-size 12px
+                            color #3F3F3F
+                            fill #3F3F3F
+                    .y-axis
+                        fill none
+                        stroke #3F3F3F
+                        stroke-opacity 0.2
+                        font-size 13px
+                        color rgba(0,0,0,0.5)
 
 @media screen and (max-width: 767)
     .container-fluid .row 
@@ -45,6 +75,10 @@
                 margin auto
             .seemore
                 font-size 17px
+                #targetgraph 
+                    margin-left 0
+                #sectorgraph 
+                    margin-left 0
 @media screen and (max-width: 575px)
     .container-fluid .row 
         .text

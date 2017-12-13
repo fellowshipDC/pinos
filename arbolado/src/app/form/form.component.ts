@@ -70,10 +70,60 @@ export class FormComponent implements OnInit {
         return true;
       }
     })
-    var target = {
-      'Sí': (checkedYes.length / this.graphInfo.length),
-      'No': (1 - checkedYes.length / this.graphInfo.length)
-    }
+    var target = [
+      { 'option' : 'Sí',
+      'value': (checkedYes.length / this.graphInfo.length)
+      },
+      { 'option' : 'No',
+      'value': (1 - (checkedYes.length / this.graphInfo.length))}
+    ]
+
+    var format = d3.format(".0%");
+
+    var margin = {top: 15, right: 25 , bottom: 15, left: 35};
+    var width = 200 - (margin.left + margin.right),
+      height = 150 - (margin.top + margin.bottom);
+      
+    var svg = d3.select('#targetgraph').append('svg')
+      .attr('width', width + margin.left + margin.right)
+      .attr('height', height + margin.top + margin.bottom)
+      .append('g')
+        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+    var x = d3.scaleLinear().range([0, width]);
+    var y = d3.scaleBand().range([height, 0]);
+
+    var yAxis = d3.axisLeft(y).tickSize([0]);
+
+    x.domain([0, 1]);
+    y.domain(target.map((d)=>{ return d.option; })).padding(0.4);
+
+    svg.append('g')
+      .attr('class', 'y-axis')
+      .call(yAxis);
+
+    var barHeight = 30;
+
+    var bar = svg.selectAll('.bar')
+        .data(target)
+        .enter().append('g')
+        .attr('class', 'bar')
+          .append('rect')
+            .attr('x', 0)
+            .attr('height', barHeight)
+            .attr('y', function(d){ return y(d.option)})
+            .attr('width', function(d){ return x(d.value)})
+    
+    var text = svg.selectAll('.bar');
+
+    text.append('text')
+      .attr('class', 'label')
+      .attr('y', function(d){ return y(d.option) + barHeight / 1.8})
+      .attr('x', function(d){ return x(d.value) + 4} )
+      .attr("dy", ".35em")
+      .text(function(d){
+        return (format(d.value));
+      });
   }
 
   graphSector(){
@@ -98,14 +148,70 @@ export class FormComponent implements OnInit {
       }
     });
 
-    var sector = {
-      'Industrial' : (checkedIndustrial.length / this.graphInfo.length),
-      'Agrícola' : (checkedAgricola.length / this.graphInfo.length),
-      'Energético' : (checkedEnergetico.length / this.graphInfo.length),
-      'Transporte' : (checkedTransporte.length / this.graphInfo.length)
-    }
+    var sector = [
+      { 
+        option: 'Industrial',
+        value: (checkedIndustrial.length / this.graphInfo.length)
+      },
+      { 
+        option: 'Agrícola',
+        value: (checkedAgricola.length / this.graphInfo.length)
+      },
+      {
+        option: 'Energético',
+        value: (checkedEnergetico.length / this.graphInfo.length)
+      },
+      {
+        option: 'Transporte',
+        value: (checkedTransporte.length / this.graphInfo.length)
+      }
+    ]
 
+    var format = d3.format(".0%");
+    
+    var margin = {top: 15, right: 25 , bottom: 15, left: 80};
+    var width = 200 - (margin.left + margin.right),
+      height = 300 - (margin.top + margin.bottom);
+          
+    var svg = d3.select('#sectorgraph').append('svg')
+      .attr('width', width + margin.left + margin.right)
+      .attr('height', height + margin.top + margin.bottom)
+      .append('g')
+        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+    
+    var x = d3.scaleLinear().range([0, width]);
+    var y = d3.scaleBand().range([height, 0]);
 
+    var yAxis = d3.axisLeft(y).tickSize([0]);    
+
+    x.domain([0, 1]);
+    y.domain(sector.map((d)=>{ return d.option; })).padding(0.4);
+
+    svg.append('g')
+      .attr('class', 'y-axis')
+      .call(yAxis);
+
+    var barHeight = 30;
+
+    var bar = svg.selectAll('.bar')
+      .data(sector)
+      .enter().append('g')
+      .attr('class', 'bar')
+        .append('rect')
+          .attr('x', 0)
+          .attr('height', barHeight)
+          .attr('y', function(d){ return y(d.option)})
+          .attr('width', function(d){ return x(d.value)});
+
+    var text = svg.selectAll('.bar');
+    text.append('text')
+      .attr('class', 'label')
+      .attr('y', function(d){ return y(d.option) + barHeight / 1.8})
+      .attr('x', function(d){ return x(d.value) + 4} )
+      .attr("dy", ".35em")
+      .text(function(d){
+        return (format(d.value));
+      });    
   }
 
   submit() {
