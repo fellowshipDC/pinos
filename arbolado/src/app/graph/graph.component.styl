@@ -1,16 +1,58 @@
-#graphid
-    &::ng-deep
-        .lineCo2
-            fill none 
-            stroke #ffab00
-            stroke-width 3 
-        .dotCo2
-            fill #ffab00
-            stroke #fff
-        .lineHa
-            fill none 
-            stroke  #84b500 
-            stroke-width 3 
-        .dotHa
-            fill  #84b500 
-            stroke #fff
+.container-fluid 
+    margin-bottom 35px
+    p  
+        font-size 13px
+        i.co2 
+            color #ffab00
+        i.ha
+            color #84b500
+    #graphid
+        &::ng-deep
+            svg 
+                margin-left -20px
+            .lineCo2
+                fill none 
+                stroke #ffab00
+                stroke-width 3 
+            .dotCo2
+                fill #ffab00
+                stroke #fff
+            .lineHa
+                fill none 
+                stroke  #84b500 
+                stroke-width 3 
+            .dotHa
+                fill  #84b500 
+                stroke #fff
+            .axis
+                font-size 11px
+                stroke-opacity 0.3
+            .y  
+                stroke-opacity 0.1
+            .x
+                stroke-opacity 0
+    div.graph
+        padding 0
+        &::ng-deep
+            div.tooltipCo2
+                font-family 'Raleway', sans-serif
+                position absolute
+                text-align center
+                padding 2px
+                font 11px
+                color #3F3F3F
+                background rgba(255,171,0,0.9)
+                border 0px
+                border-radius 8px
+                pointer-events none
+            div.tooltipHa
+                font-family 'Raleway', sans-serif
+                position absolute
+                text-align center
+                padding 2px
+                font 11px
+                color #3F3F3F
+                background rgba(132,181,0,0.9)
+                border 0px
+                border-radius 8px
+                pointer-events none

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 import { states } from './mexican_states';
 import * as L from 'leaflet';
 import { MatSliderModule } from '@angular/material';
@@ -20,7 +20,7 @@ export class MapComponent implements OnInit {
   zoom = 4.5;
   layerOn= true;
   
-  constructor(private http: Http) { }
+  constructor(private http: HttpClient) { }
 
   setmap(){
     //set base characteristics
@@ -35,14 +35,14 @@ export class MapComponent implements OnInit {
 
     //set styles functions
       function getColorTreeLoss(d) {
-        return d > 5000 ? '#084081' :
-              d > 4500  ? '#0868ac' :
-              d > 4000  ? '#2b8cbe' :
-              d > 3500  ? '#4eb3d3' :
-              d > 2500   ? '#7bccc4' :
-              d > 1500   ? '#a8ddb5' :
-              d > 500   ? '#ccebc5' :
-                         '#e0f3db' ;
+        return d >= 9000 ? '#800026' :
+              d >= 4000  ? '#BD0026' :
+              d >= 2500  ? '#E31A1C' :
+              d >= 1500  ? '#FC4E2A' :
+              d >= 800   ? '#FD8D3C' :
+              d >= 250   ? '#FEB24C' :
+              d >= 100   ? '#FED976' :
+                         '#FFEDA0' ;
       }
 
       var styleStatesTreeLoss = (feature) => {
@@ -69,14 +69,14 @@ export class MapComponent implements OnInit {
       }
 
       function getColorCo2(d) {
-        return d > 1000000 ? '#800026' :
-              d > 500000  ? '#BD0026' :
-              d > 200000  ? '#E31A1C' :
-              d > 100000  ? '#FC4E2A' :
-              d > 50000  ? '#FD8D3C' :
-              d > 20000   ? '#FEB24C' :
-              d > 10000   ? '#FED976' :
-                          '#FFEDA0';
+        return d >= 1000000 ? '#5F2248' :
+              d >= 500000  ? '#8C3F5D' :
+              d >= 200000  ? '#AF5F6C' :
+              d >= 100000  ? '#E07D81' :
+              d >= 50000  ? '#C8817A' :
+              d >= 20000   ? '#D8A68E' :
+              d >= 10000   ? '#E4C9AC' :
+                          '#EFE8D5';
       }
 
       var styleStatesCo2 = (feature)=> {
@@ -186,17 +186,17 @@ export class MapComponent implements OnInit {
         this._div.innerHTML = '';
 
         if (currentLayer == 'Hectáreas perdidas'){//change for layer's name
-          var grades = [0, 500, 1500, 2500, 3500, 4000, 4500, 5000];
+          var grades = [0, 100, 250, 800, 1500, 2500, 4000, 9000];
           for (var i = 0; i < grades.length; i++){
             this._div.innerHTML += '<i class="fa fa-square" style="color:' + getColorTreeLoss(grades[i] + 1) + '"></i> ' +
-            grades[i] + (grades[i + 1] ? '+' +'<br>' : '+');
+            grades[i] + (grades[i + 1] ? ' +' +'<br>' : ' +');
           }
         }
         else{
           var grades = [0, 10000, 20000, 50000, 100000, 200000, 500000, 1000000];
           for (var i = 0; i < grades.length; i++){
             this._div.innerHTML += '<i class="fa fa-square" style="color:' + getColorCo2(grades[i] + 1) + '"></i> ' +
-            grades[i] + (grades[i + 1] ? '+' + '<br>' : '+');
+            grades[i] + (grades[i + 1] ? ' +' + '<br>' : ' +');
           }
         }
 
@@ -243,7 +243,7 @@ export class MapComponent implements OnInit {
       L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
         maxZoom: 18,
-        id: 'mapbox.streets',
+        id: 'mapbox.light',
         accessToken: 'pk.eyJ1Ijoic2F0aXJhbWEiLCJhIjoiY2phcmhpZWxjNGppaDJ3cGwyYmp0NGVtZyJ9.1E3t6hV_CYLzQ_0Ba1IFmQ'
       }).addTo(this.map);
       
@@ -262,30 +262,36 @@ export class MapComponent implements OnInit {
 
   getData() {
     this.http.get('http://localhost:3000/forest')
-    .subscribe((res: Response) => {
-    this.data = res.json();
-    this.treeLoss = res.json().data.filter((obj)=>{
-      if (obj.indicator_id == 1 && obj.sub_nat_id > 0 && obj.boundary_id ==1 && obj.thresh == 10){
-        return true;
+    .subscribe(
+      res => {
+        this.data = res;
+        if(this.data !== undefined || this.data !== null){
+          this.treeLoss = this.data.data.filter((obj)=>{
+            if (obj.indicator_id == 1 && obj.sub_nat_id > 0 && obj.boundary_id ==1 && obj.thresh == 10){
+              return true;
+            }
+            else{
+              return false;
+            }
+          });
+          this.co2 = this.data.data.filter((obj)=>{
+            if (obj.indicator_id == 14 && obj.sub_nat_id > 0 && obj.boundary_id ==1 && obj.thresh == 10){
+              return true;
+            }
+            else{
+              return false;
+            }
+          });
+          
+          if (this.treeLoss.length > 0 && this.co2.length > 0){
+            this.setmap();
+          }
+        }
+      },
+      err => {
+        console.log('error');
       }
-      else{
-        return false;
-      }
-    });
-    this.co2 = res.json().data.filter((obj)=>{
-      if (obj.indicator_id == 14 && obj.sub_nat_id > 0 && obj.boundary_id ==1 && obj.thresh == 10){
-        return true;
-      }
-      else{
-        return false;
-      }
-    });
-    
-    if (this.treeLoss.length > 0 && this.co2.length > 0){
-      this.setmap();
-    }
-    
-    });
+    )
   }
 
   changeYear(year) {

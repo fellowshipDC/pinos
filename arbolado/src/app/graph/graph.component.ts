@@ -17,7 +17,7 @@ export class GraphComponent implements OnInit {
 
   d3graph(){
     //svg width and height
-    var margin = {top: 50, right: 50, bottom: 50, left: 50};
+    var margin = {top: 20, right: 50, bottom: 50, left: 50};
     var w = 700 - (margin.left + margin.right);
     var h = 500 - (margin.top + margin.bottom);
 
@@ -54,7 +54,7 @@ export class GraphComponent implements OnInit {
       .attr("transform", "translate(0," + h + ")")
       .call(xAxis);
 
-    var yAxisLeft = d3.axisLeft(yScaleCo2).ticks(5);
+    var yAxisLeft = d3.axisLeft(yScaleCo2).ticks(5).tickSize(-w);
     graph.append("g")
       .attr("class", "y axis")
       .call(yAxisLeft);
@@ -74,6 +74,17 @@ export class GraphComponent implements OnInit {
       .data([ha])
       .attr('class', 'lineHa')
       .attr('d', lineHa);    
+
+    //tooltip
+    var div1 = d3.select("div.graph").append("div")
+      .attr("class", "tooltipCo2")
+      .style("opacity", 0);
+
+    var div2 = d3.select("div.graph").append("div")
+      .attr("class", "tooltipHa")
+      .style("opacity", 0);
+
+    var decimals = d3.format(',.1f');
   
     graph.selectAll('.dotCo2')
       .data(co2)
@@ -81,7 +92,20 @@ export class GraphComponent implements OnInit {
         .attr('class', 'dotCo2')
         .attr('cx', function(d){ return xScale(d.year) })
         .attr('cy', function(d){ return yScaleCo2(d.value) })
-        .attr('r', 5);
+        .attr('r', 5)
+        .on('mouseover', function(d){
+          div1.transition()
+            .duration(200)
+            .style('opacity', 0.9)
+          div1.html('<b>'+ d.year + '</b><br>' + decimals(d.value) + ' Mt CO2')
+            .style("left", (d3.mouse(d3.event.currentTarget)[0]) + 15 + "px")
+            .style("top", (d3.mouse(d3.event.currentTarget)[1]) + "px");
+        })
+        .on("mouseout", function(d) {
+          div1.transition()
+            .duration(500)
+            .style("opacity", 0);
+          });
 
     graph.selectAll('.dotHa')
       .data(ha)
@@ -89,9 +113,22 @@ export class GraphComponent implements OnInit {
         .attr('class', 'dotHa')
         .attr('cx', function(d){ return xScale(d.year) })
         .attr('cy', function(d){ return yScaleHa(d.value / 1000) })
-        .attr('r', 5);
+        .attr('r', 5)
+        .on('mouseover', function(d){
+          div2.transition()
+            .duration(200)
+            .style('opacity', 0.9)
+          div2.html('<b>'+ d.year + '</b><br>' + decimals(d.value/ 1000) + 'k Ha')
+            .style("left", (d3.mouse(d3.event.currentTarget)[0]) + 15 + "px")
+            .style("top", (d3.mouse(d3.event.currentTarget)[1]) + "px");
+        })
+        .on("mouseout", function(d) {
+          div2.transition()
+            .duration(500)
+            .style("opacity", 0);
+          });
   
-    var curtain = graph.append('rect')
+    /*var curtain = graph.append('rect')
       .attr('x', -1 * (w  + margin.left))
       .attr('y', -1 * h)
       .attr('height', h)
@@ -105,8 +142,8 @@ export class GraphComponent implements OnInit {
       .duration(6000)
       .ease(d3.easeLinear);
 
-    t.select('rect.curtain')
-      .attr('width', 0);
+    //t.select('rect.curtain')
+      //.attr('width', 0);*/
   }
 
   ngOnInit() {
