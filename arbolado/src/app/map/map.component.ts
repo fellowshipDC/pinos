@@ -17,7 +17,7 @@ export class MapComponent implements OnInit {
   treeLoss = [];
   year = 2001;
   center = [20.132442, -102.852647];
-  zoom = 4;
+  zoom = 4.5;
   layerOn= true;
   
   constructor(private http: Http) { }
@@ -35,14 +35,14 @@ export class MapComponent implements OnInit {
 
     //set styles functions
       function getColorTreeLoss(d) {
-        return d > 5000 ? '#800026' :
-              d > 4500  ? '#BD0026' :
-              d > 4000  ? '#E31A1C' :
-              d > 3500  ? '#FC4E2A' :
-              d > 2500   ? '#FD8D3C' :
-              d > 1500   ? '#FEB24C' :
-              d > 500   ? '#FED976' :
-                          '#FFEDA0';
+        return d > 5000 ? '#084081' :
+              d > 4500  ? '#0868ac' :
+              d > 4000  ? '#2b8cbe' :
+              d > 3500  ? '#4eb3d3' :
+              d > 2500   ? '#7bccc4' :
+              d > 1500   ? '#a8ddb5' :
+              d > 500   ? '#ccebc5' :
+                         '#e0f3db' ;
       }
 
       var styleStatesTreeLoss = (feature) => {
@@ -60,7 +60,7 @@ export class MapComponent implements OnInit {
               fillColor: getColorTreeLoss(forYear[i].value),
               weight: 2,
               opacity: 1,
-              color: 'white',
+              color:  '#fafafa',
               dashArray: '3',
               fillOpacity: 0.7
           };
@@ -69,14 +69,14 @@ export class MapComponent implements OnInit {
       }
 
       function getColorCo2(d) {
-        return d > 1000000 ? '#034e7b' :
-              d > 500000  ? '#0570b0' :
-              d > 200000  ? '#3690c0' :
-              d > 100000  ? '#74a9cf' :
-              d > 50000  ? '#a6bddb' :
-              d > 20000   ? '#d0d1e6' :
-              d > 10000   ? '#ece7f2' :
-                          '#fff7fb';
+        return d > 1000000 ? '#800026' :
+              d > 500000  ? '#BD0026' :
+              d > 200000  ? '#E31A1C' :
+              d > 100000  ? '#FC4E2A' :
+              d > 50000  ? '#FD8D3C' :
+              d > 20000   ? '#FEB24C' :
+              d > 10000   ? '#FED976' :
+                          '#FFEDA0';
       }
 
       var styleStatesCo2 = (feature)=> {
@@ -94,7 +94,7 @@ export class MapComponent implements OnInit {
             fillColor: getColorCo2(forYear[i].value * 1000000),
             weight: 2,
             opacity: 1,
-            color: 'white',
+            color: '#fafafa',
             dashArray: '3',
             fillOpacity: 0.7
             }
@@ -107,16 +107,6 @@ export class MapComponent implements OnInit {
       //Base layers (deforestation rate & Co2 mt2 emmissions)
       var layer1 = L.geoJson(states, {style: styleStatesTreeLoss, onEachFeature: mouseEffects});
       var layer2 = L.geoJson(states, {style: styleStatesCo2, onEachFeature: mouseEffects});
-      
-      //Over layers (shows if deforestation occurred in a protected or mining area)
-      var overlay11 = L.marker([10.6595382,-100.3494]).bindPopup('This is Littleton, CO.');
-      var overlay12 = L.marker([15.3765406,-83.6694021]).bindPopup('This is Littleton, CO.');
-
-      var overlay21 = L.marker([20.6595382,-103.3494]).bindPopup('This is Littleton, CO.');
-      var overlay22 = L.marker([7.3765406,-93.6694021]).bindPopup('This is Littleton, CO.');
-
-      var overlay1 = L.layerGroup([overlay11, overlay12]);
-      var overlay2 = L.layerGroup([overlay21, overlay22]);
 
       //Define current layer
       var currentLayer = ''
@@ -133,11 +123,6 @@ export class MapComponent implements OnInit {
       var baseLayers = {
         "Hectáreas perdidas": layer1,
         "Emisiones de CO2": layer2
-      }
-
-      var overLayers = {
-        "Over 1": overlay1,
-        "Over 2": overlay2
       }
 
     //info controls
@@ -163,8 +148,8 @@ export class MapComponent implements OnInit {
 
           //write it on 
           details._div.innerHTML = '<h4>Deforestación en México</h4>' + 
-          (prop ? '<b>' + prop.admin_name +  '</b><br />' + propData + ' ha perdidas'
-          : 'Selecciona un estado');
+          '<p>' + (prop ? '<b>' + prop.admin_name +  '</b><br />' + propData + ' ha perdidas'
+          : 'Selecciona un estado') + '</p>';
         }
         else{
 
@@ -180,8 +165,8 @@ export class MapComponent implements OnInit {
           //write it on
 
           details._div.innerHTML = '<h4>Deforestación en México</h4>' + 
-          (prop ? '<b>' + prop.admin_name +  '</b><br />' + propData + ' toneladas de CO2 emitidas' 
-          : 'Selecciona un estado');
+          '<p>' + (prop ? '<b>' + prop.admin_name +  '</b><br />' + propData + ' toneladas de CO2 emitidas' 
+          : 'Selecciona un estado') + '</p>';
         }
       };
 
@@ -204,14 +189,14 @@ export class MapComponent implements OnInit {
           var grades = [0, 500, 1500, 2500, 3500, 4000, 4500, 5000];
           for (var i = 0; i < grades.length; i++){
             this._div.innerHTML += '<i class="fa fa-square" style="color:' + getColorTreeLoss(grades[i] + 1) + '"></i> ' +
-            grades[i] + (grades[i + 1] ? '&ndash;' + (grades[i + 1]-1) + '<br>' : '+');
+            grades[i] + (grades[i + 1] ? '+' +'<br>' : '+');
           }
         }
         else{
           var grades = [0, 10000, 20000, 50000, 100000, 200000, 500000, 1000000];
           for (var i = 0; i < grades.length; i++){
             this._div.innerHTML += '<i class="fa fa-square" style="color:' + getColorCo2(grades[i] + 1) + '"></i> ' +
-            grades[i] + (grades[i + 1] ? '&ndash;' + (grades[i + 1]- 1) + '<br>' : '+');
+            grades[i] + (grades[i + 1] ? '+' + '<br>' : '+');
           }
         }
 
@@ -263,7 +248,7 @@ export class MapComponent implements OnInit {
       }).addTo(this.map);
       
       //Add layers with control and track current layer
-      L.control.layers(baseLayers, overLayers).addTo(this.map);
+      L.control.layers(baseLayers).addTo(this.map);
       this.map.on('baselayerchange', (e) => {
         currentLayer = e.name;//updates layer
         legend.update(currentLayer);//updates legend
@@ -272,7 +257,7 @@ export class MapComponent implements OnInit {
   }
 
   ngOnInit() {
-    //this.getData();
+    this.getData();
   }
 
   getData() {

@@ -40,27 +40,30 @@ export class GraphComponent implements OnInit {
     var yScaleHa = d3.scaleLinear().domain([350, 100]).range([0, h]);
 
     var lineCo2 = d3.line()
-      .x(function(d, i) { console.log((d.year)); return xScale((d.year));})
+      .x(function(d, i) { return xScale((d.year));})
       .y(function(d) { return yScaleCo2(d.value);});
 
     var lineHa = d3.line()
-      .x(function(d, i) { console.log((d.year)); return xScale((d.year));})
+      .x(function(d, i) { return xScale((d.year));})
       .y(function(d) {return yScaleHa(d.value / 1000);});
 
     //axes
+    var xAxis = d3.axisBottom(xScale).tickFormat(d3.format('d'));
     graph.append("g")
       .attr("class", "x axis")
       .attr("transform", "translate(0," + h + ")")
-      .call(d3.axisBottom(xScale));
+      .call(xAxis);
 
+    var yAxisLeft = d3.axisLeft(yScaleCo2).ticks(5);
     graph.append("g")
       .attr("class", "y axis")
-      .call(d3.axisLeft(yScaleCo2));
+      .call(yAxisLeft);
 
+    var yAxisRight = d3.axisRight(yScaleHa).ticks(5);
     graph.append("g")
       .attr("class", "y axis")
       .attr("transform", "translate("+ w + ", 0)")
-      .call(d3.axisRight(yScaleHa));
+      .call(yAxisRight);
 
     var pathCo2 = graph.append('path')
       .data([co2])
@@ -76,7 +79,7 @@ export class GraphComponent implements OnInit {
       .data(co2)
       .enter().append('circle')
         .attr('class', 'dotCo2')
-        .attr('cx', function(d, i){ return xScale(i) })
+        .attr('cx', function(d){ return xScale(d.year) })
         .attr('cy', function(d){ return yScaleCo2(d.value) })
         .attr('r', 5);
 
@@ -84,7 +87,7 @@ export class GraphComponent implements OnInit {
       .data(ha)
       .enter().append('circle')
         .attr('class', 'dotHa')
-        .attr('cx', function(d, i){ return xScale(i) })
+        .attr('cx', function(d){ return xScale(d.year) })
         .attr('cy', function(d){ return yScaleHa(d.value / 1000) })
         .attr('r', 5);
   
@@ -107,7 +110,7 @@ export class GraphComponent implements OnInit {
   }
 
   ngOnInit() {
-    //this.getData();
+    this.getData();
   }
 
   getData() {
