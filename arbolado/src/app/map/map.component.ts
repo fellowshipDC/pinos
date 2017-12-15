@@ -35,14 +35,14 @@ export class MapComponent implements OnInit {
 
     //set styles functions
       function getColorTreeLoss(d) {
-        return d >= 9000 ? '#800026' :
-              d >= 4000  ? '#BD0026' :
-              d >= 2500  ? '#E31A1C' :
-              d >= 1500  ? '#FC4E2A' :
-              d >= 800   ? '#FD8D3C' :
-              d >= 250   ? '#FEB24C' :
-              d >= 100   ? '#FED976' :
-                         '#FFEDA0' ;
+        return d >= 9000 ? '#85480b' :
+              d >= 4000  ? '#87530f' :
+              d >= 2500  ? '#895c13' :
+              d >= 1500  ? '#8b6e1b' :
+              d >= 800   ? '#8ba636' :
+              d >= 250   ? '#99D033' :
+              d >= 100   ? '#B6EE4F' :
+                         '#DBFE9A' ;
       }
 
       var styleStatesTreeLoss = (feature) => {
@@ -69,14 +69,14 @@ export class MapComponent implements OnInit {
       }
 
       function getColorCo2(d) {
-        return d >= 1000000 ? '#5F2248' :
-              d >= 500000  ? '#8C3F5D' :
-              d >= 200000  ? '#AF5F6C' :
-              d >= 100000  ? '#E07D81' :
-              d >= 50000  ? '#C8817A' :
-              d >= 20000   ? '#D8A68E' :
-              d >= 10000   ? '#E4C9AC' :
-                          '#EFE8D5';
+        return d >= 1000000 ? '#252525' :
+              d >= 500000  ? '#525252' :
+              d >= 200000  ? '#737373' :
+              d >= 100000  ? '#969696' :
+              d >= 50000  ? '#bdbdbd' :
+              d >= 20000   ? '#d9d9d9' :
+              d >= 10000   ? '#f0f0f0' :
+                          '#ffffff';
       }
 
       var styleStatesCo2 = (feature)=> {
@@ -144,7 +144,7 @@ export class MapComponent implements OnInit {
             if(obj.year == this.year && obj.sub_nat_id == prop.sub_nat_id){
               return true;
             }
-          })[0].value.toLocaleString(undefined, {maximumFractionDigits: 2}) : '';
+          })[0].value.toLocaleString('en', {maximumFractionDigits: 2}) : '';
 
           //write it on 
           details._div.innerHTML = '<h4>Deforestación en México</h4>' + 
@@ -243,7 +243,7 @@ export class MapComponent implements OnInit {
       L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
         maxZoom: 18,
-        id: 'mapbox.light',
+        id: 'mapbox.streets',
         accessToken: 'pk.eyJ1Ijoic2F0aXJhbWEiLCJhIjoiY2phcmhpZWxjNGppaDJ3cGwyYmp0NGVtZyJ9.1E3t6hV_CYLzQ_0Ba1IFmQ'
       }).addTo(this.map);
       
