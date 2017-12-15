@@ -9,7 +9,7 @@ import * as d3 from 'd3';
 })
 export class FormComponent implements OnInit {
 
-  formSent: any;
+  formSent = false;
   url = 'http://localhost:3000/forest/form';
   data = {
     target: {
@@ -215,26 +215,30 @@ export class FormComponent implements OnInit {
   }
 
   submit() {
-    document.getElementById('discover1').style.display = 'inline';
-    document.getElementById('discover2').style.display = 'inline';
-    document.getElementById('form1').style.display = 'none';
-    document.getElementById('form2').style.display = 'none';
+    if (!this.formSent){
+      document.getElementById('discover1').style.display = 'inline';
+      document.getElementById('discover2').style.display = 'inline';
+      document.getElementById('form1').style.display = 'none';
+      document.getElementById('form2').style.display = 'none';
 
-    this.http
-      .post(this.url, this.data)
-      .subscribe(
-        res => {
-          this.info = res;
-          if (this.info !== undefined || this.info !== null){
-            this.graphInfo = this.info.response;
-            this.graphTarget();
-            this.graphSector();
-          };
-        },
-        err => {
-          console.log('error');
-        }
-      );
+      this.http
+        .post(this.url, this.data)
+        .subscribe(
+          res => {
+            this.info = res;
+            if (this.info !== undefined || this.info !== null){
+              this.graphInfo = this.info.response;
+              this.graphTarget();
+              this.graphSector();
+            };
+          },
+          err => {
+            console.log('error');
+          }
+        );
+      this.formSent = true;
+    }
+    else{}
   }
 
 }

@@ -15,12 +15,20 @@
             font-family 'Raleway', sans-serif
             margin-top 20px
             margin-bottom 30px
-            h3  
+            h3 
+                font-size 40px
+                overflow-wrap break-word
+                br    
+                    display none
+            h3 .display
                 font-size 55px
-                font-weight 300
+                font-weight 700
+                overflow-wrap break-word
+            p.madeby
+                font-size 13px
                 margin-bottom 25px
             p 
-                font-size 19px
+                font-size 17px
                 a  
                     color #000000
                     font-size 13px
@@ -31,9 +39,18 @@
         margin-bottom 70px
         .row .intro p
             font-size 20px
+        .row .content
+            h3 br    
+                display inline
         
 @media screen and (max-width: 575px)
-    .container-fluid .row .intro p
-        font-size 18px
+    .container-fluid 
+        .row .intro p
+            font-size 18px
+        .row .content
+            h3 
+                font-size 32px
+            h3 .display
+                font-size 55px
         
     
