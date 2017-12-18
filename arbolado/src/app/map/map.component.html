@@ -15,7 +15,11 @@
       <p>- Selecciona -</p>
       <p class="lista">
         Año de análisis</p>
-      <mat-slider #slide min="2001" max="2016" step="1" thumbLabel (change)="changeYear(slide.value); setmap()"></mat-slider>            
+      <mat-slider #slide min="2001" max="2016" step="1" thumbLabel (change)="changeYear(slide.value); setmap()"></mat-slider>
+      <p class="national">A nivel nacional:<br>
+        {{nationalTL}} Ha<br>
+        {{nationalCo2}} MT CO2
+      </p>          
     </div>
     <div class="mapcol col-lg-7 col-md-10 col-sm-12 text-center">
       <div id="mapid" class="text-center"></div>

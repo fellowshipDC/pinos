@@ -12,6 +12,8 @@ import { MatSliderModule } from '@angular/material';
 export class MapComponent implements OnInit {
 
   data: any;
+  nationalTL: any;
+  nationalCo2: any;
   map = null;
   co2 = [];
   treeLoss = [];
@@ -35,14 +37,14 @@ export class MapComponent implements OnInit {
 
     //set styles functions
       function getColorTreeLoss(d) {
-        return d >= 9000 ? '#85480b' :
-              d >= 4000  ? '#87530f' :
-              d >= 2500  ? '#895c13' :
-              d >= 1500  ? '#8b6e1b' :
-              d >= 800   ? '#8ba636' :
-              d >= 250   ? '#99D033' :
-              d >= 100   ? '#B6EE4F' :
-                         '#DBFE9A' ;
+        return d >= 9000 ? '#8C2D04' :
+              d >= 4000  ? '#CC4C02' :
+              d >= 2500  ? '#EC7014' :
+              d >= 1500  ? '#FE9929' :
+              d >= 800   ? '#FEC44F' :
+              d >= 250   ? '#FEE391' :
+              d >= 100   ? '#FFF7BC' :
+                         '#F4FFCa' ;
       }
 
       var styleStatesTreeLoss = (feature) => {
@@ -147,7 +149,7 @@ export class MapComponent implements OnInit {
           })[0].value.toLocaleString('en', {maximumFractionDigits: 2}) : '';
 
           //write it on 
-          details._div.innerHTML = '<h4>Deforestación en México</h4>' + 
+          details._div.innerHTML = '<h4>Deforestación en México<br>' + this.year + '</h4>' + 
           '<p>' + (prop ? '<b>' + prop.admin_name +  '</b><br />' + propData + ' ha perdidas'
           : 'Selecciona un estado') + '</p>';
         }
@@ -164,8 +166,8 @@ export class MapComponent implements OnInit {
           propData = (propData* 1000000).toLocaleString(undefined, {maximumFractionDigits: 2});
           //write it on
 
-          details._div.innerHTML = '<h4>Deforestación en México</h4>' + 
-          '<p>' + (prop ? '<b>' + prop.admin_name +  '</b><br />' + propData + ' toneladas de CO2 emitidas' 
+          details._div.innerHTML = '<h4>Deforestación en México<br>' + this.year + '</h4>' + 
+          '<p>' + (prop ? '<b>' + prop.admin_name +  '</b><br />' + propData + ' toneladas de CO2 <br>emitidas por deforestación' 
           : 'Selecciona un estado') + '</p>';
         }
       };
@@ -260,12 +262,28 @@ export class MapComponent implements OnInit {
     this.getData();
   }
 
+  nationalValues(){
+    //if(this.data !== undefined|| this.data !== null){
+      this.nationalTL = this.data.data.filter((obj) => {
+        if (obj.indicator_id == 1 && isNaN(obj.sub_nat_id) && obj.boundary_id ==1 && obj.thresh == 10 && this.year === obj.year){
+          return true;
+        }
+      })[0].value.toLocaleString('en', {maximumFractionDigits: 2});
+      this.nationalCo2 = this.data.data.filter((obj) => {
+        if (obj.indicator_id == 14 && isNaN(obj.sub_nat_id) && obj.boundary_id ==1 && obj.thresh == 10 && this.year === obj.year){
+          return true;
+        }
+      })[0].value.toLocaleString('en', {maximumFractionDigits: 2});
+   //}
+  }
+
   getData() {
     this.http.get('http://localhost:3000/forest')
     .subscribe(
       res => {
         this.data = res;
         if(this.data !== undefined || this.data !== null){
+          this.nationalValues();
           this.treeLoss = this.data.data.filter((obj)=>{
             if (obj.indicator_id == 1 && obj.sub_nat_id > 0 && obj.boundary_id ==1 && obj.thresh == 10){
               return true;
@@ -301,5 +319,6 @@ export class MapComponent implements OnInit {
       this.zoom = this.map.getZoom();
       this.map.remove();
     }
+    this.nationalValues();    
   }
 }
